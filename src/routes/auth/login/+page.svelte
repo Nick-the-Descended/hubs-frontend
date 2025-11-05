@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { customerStore } from '$lib/stores/customer.svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 
 	let email = $state('');
 	let password = $state('');
 	let error = $state('');
+
+	// Check if redirected from verification
+	const verified = $derived(page.url.searchParams.get('verified') === 'true');
 
 	async function handleLogin(e: Event) {
 		e.preventDefault();
@@ -22,6 +26,13 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
 	<div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
 		<h1 class="text-3xl font-bold mb-6 text-center text-gray-900">Login</h1>
+
+		{#if verified}
+			<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+				<p class="font-medium">Phone verified successfully! Please log in to continue.</p>
+				<p class="text-sm mt-1">Use your email (or phone@placeholder.com) and password to log in.</p>
+			</div>
+		{/if}
 
 		{#if error}
 			<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
