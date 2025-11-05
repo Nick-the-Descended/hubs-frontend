@@ -1,0 +1,1 @@
+- Project uses svelte 5
