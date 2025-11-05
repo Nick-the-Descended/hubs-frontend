@@ -43,6 +43,7 @@
 		"vite": "^7.1.10"
 	},
 	"dependencies": {
-		"@medusajs/js-sdk": "^2.11.2"
+		"@medusajs/js-sdk": "^2.11.2",
+		"@medusajs/types": "^2.11.2"
 	}
 }
