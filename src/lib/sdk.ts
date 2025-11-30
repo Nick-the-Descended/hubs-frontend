@@ -1,5 +1,8 @@
-import Medusa from "@medusajs/js-sdk";
-import { PUBLIC_MEDUSA_BACKEND_URL, PUBLIC_MEDUSA_PUBLISHABLE_KEY } from '$env/static/public';
+import Medusa from '@medusajs/js-sdk';
+import {
+    PUBLIC_MEDUSA_BACKEND_URL,
+    PUBLIC_MEDUSA_PUBLISHABLE_KEY
+} from '$env/static/public';
 
 export const sdk = new Medusa({
     baseUrl: PUBLIC_MEDUSA_BACKEND_URL,

@@ -7,7 +7,12 @@ class CartStore {
     error = $state<string | null>(null);
 
     get itemCount() {
-        return this.cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+        return (
+            this.cart?.items?.reduce(
+                (sum, item) => sum + item.quantity,
+                0
+            ) ?? 0
+        );
     }
 
     get total() {
@@ -69,10 +74,13 @@ class CartStore {
         this.loading = true;
         this.error = null;
         try {
-            const { cart } = await sdk.store.cart.createLineItem(this.cart.id, {
-                variant_id: variantId,
-                quantity
-            });
+            const { cart } = await sdk.store.cart.createLineItem(
+                this.cart.id,
+                {
+                    variant_id: variantId,
+                    quantity
+                }
+            );
             this.cart = cart;
         } catch (err: any) {
             this.error = err.message;
@@ -109,7 +117,10 @@ class CartStore {
         this.error = null;
         try {
             // IMPORTANT: deleteLineItem returns { parent: cart }
-            const response = await sdk.store.cart.deleteLineItem(this.cart.id, lineItemId);
+            const response = await sdk.store.cart.deleteLineItem(
+                this.cart.id,
+                lineItemId
+            );
             this.cart = response.parent || null;
         } catch (err: any) {
             this.error = err.message;
@@ -124,7 +135,9 @@ class CartStore {
 
         this.loading = true;
         try {
-            const { cart } = await sdk.store.cart.update(this.cart.id, { email });
+            const { cart } = await sdk.store.cart.update(this.cart.id, {
+                email
+            });
             this.cart = cart;
         } finally {
             this.loading = false;
@@ -161,9 +174,12 @@ class CartStore {
 
         this.loading = true;
         try {
-            const { cart } = await sdk.store.cart.addShippingMethod(this.cart.id, {
-                option_id: optionId
-            });
+            const { cart } = await sdk.store.cart.addShippingMethod(
+                this.cart.id,
+                {
+                    option_id: optionId
+                }
+            );
             this.cart = cart;
         } catch (err: any) {
             this.error = err.message;
@@ -206,7 +222,8 @@ class CartStore {
             } else if (result.type === 'cart' && result.cart) {
                 // Error - cart completion failed
                 this.cart = result.cart;
-                this.error = result.error?.message || 'Failed to complete cart';
+                this.error =
+                    result.error?.message || 'Failed to complete cart';
                 throw new Error(JSON.stringify(result.error));
             }
 

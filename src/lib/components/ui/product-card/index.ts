@@ -1,7 +1,7 @@
-import Root from "./product-card.svelte";
+import Root from './product-card.svelte';
 
 export {
-	Root,
-	//
-	Root as ProductCard,
+    Root,
+    //
+    Root as ProductCard
 };

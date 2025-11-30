@@ -24,12 +24,19 @@
         }
 
         if (phone.length < 10) {
-            customerStore.error = 'Phone number must be at least 10 digits';
+            customerStore.error =
+                'Phone number must be at least 10 digits';
             return;
         }
 
         try {
-            await customerStore.register(phone, password, firstName, lastName, email || undefined);
+            await customerStore.register(
+                phone,
+                password,
+                firstName,
+                lastName,
+                email || undefined
+            );
             // Move to OTP verification step
             step = 'verify';
         } catch (err: any) {
@@ -48,7 +55,7 @@
 
         try {
             await customerStore.verifyOTP(phone, otp);
-            
+
             // Auto-login after successful OTP verification
             // Use the email (placeholder or provided) for login
             const loginEmail = email || `${phone}@placeholder.com`;
@@ -71,20 +78,30 @@
     }
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+<div
+    class="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8"
+>
+    <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
         {#if step === 'register'}
-            <h1 class="text-3xl font-bold mb-6 text-center text-gray-900">Create Account</h1>
+            <h1 class="mb-6 text-center text-3xl font-bold text-gray-900">
+                Create Account
+            </h1>
 
             {#if customerStore.error}
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+                <div
+                    class="mb-4 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700"
+                    role="alert"
+                >
                     <p>{customerStore.error}</p>
                 </div>
             {/if}
 
             <form onsubmit={handleRegister} class="space-y-6">
                 <div>
-                    <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                        for="firstName"
+                        class="mb-2 block text-sm font-medium text-gray-700"
+                    >
                         First Name <span class="text-red-500">*</span>
                     </label>
                     <input
@@ -92,13 +109,16 @@
                         type="text"
                         bind:value={firstName}
                         required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                         placeholder="John"
                     />
                 </div>
 
                 <div>
-                    <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                        for="lastName"
+                        class="mb-2 block text-sm font-medium text-gray-700"
+                    >
                         Last Name <span class="text-red-500">*</span>
                     </label>
                     <input
@@ -106,13 +126,16 @@
                         type="text"
                         bind:value={lastName}
                         required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                         placeholder="Doe"
                     />
                 </div>
 
                 <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                        for="phone"
+                        class="mb-2 block text-sm font-medium text-gray-700"
+                    >
                         Phone Number <span class="text-red-500">*</span>
                     </label>
                     <input
@@ -121,27 +144,37 @@
                         bind:value={phone}
                         required
                         minlength="10"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                         placeholder="+1234567890"
                     />
-                    <p class="mt-1 text-xs text-gray-500">We'll send you a verification code via SMS</p>
+                    <p class="mt-1 text-xs text-gray-500">
+                        We'll send you a verification code via SMS
+                    </p>
                 </div>
 
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        Email <span class="text-gray-400 text-xs">(Optional)</span>
+                    <label
+                        for="email"
+                        class="mb-2 block text-sm font-medium text-gray-700"
+                    >
+                        Email <span class="text-xs text-gray-400"
+                            >(Optional)</span
+                        >
                     </label>
                     <input
                         id="email"
                         type="email"
                         bind:value={email}
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                         placeholder="john@example.com"
                     />
                 </div>
 
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                        for="password"
+                        class="mb-2 block text-sm font-medium text-gray-700"
+                    >
                         Password <span class="text-red-500">*</span>
                     </label>
                     <input
@@ -150,21 +183,25 @@
                         bind:value={password}
                         required
                         minlength="8"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                         placeholder="At least 8 characters"
                     />
                 </div>
 
                 <div>
-                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
-                        Confirm Password <span class="text-red-500">*</span>
+                    <label
+                        for="confirmPassword"
+                        class="mb-2 block text-sm font-medium text-gray-700"
+                    >
+                        Confirm Password <span class="text-red-500">*</span
+                        >
                     </label>
                     <input
                         id="confirmPassword"
                         type="password"
                         bind:value={confirmPassword}
                         required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                         placeholder="Re-enter your password"
                     />
                 </div>
@@ -172,43 +209,62 @@
                 <button
                     type="submit"
                     disabled={customerStore.loading}
-                    class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+                    class="w-full rounded-lg bg-blue-600 py-3 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
                 >
-                    {customerStore.loading ? 'Creating Account...' : 'Register'}
+                    {customerStore.loading
+                        ? 'Creating Account...'
+                        : 'Register'}
                 </button>
             </form>
 
             <p class="mt-6 text-center text-gray-600">
                 Already have an account?
-                <a href="/auth/login" class="text-blue-600 hover:text-blue-800 font-medium">
+                <a
+                    href="/auth/login"
+                    class="font-medium text-blue-600 hover:text-blue-800"
+                >
                     Login here
                 </a>
             </p>
         {:else if step === 'verify'}
-            <h1 class="text-3xl font-bold mb-6 text-center text-gray-900">Verify Phone Number</h1>
+            <h1 class="mb-6 text-center text-3xl font-bold text-gray-900">
+                Verify Phone Number
+            </h1>
 
-            <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded mb-4">
+            <div
+                class="mb-4 rounded border border-blue-200 bg-blue-50 px-4 py-3 text-blue-800"
+            >
                 <p class="text-sm">
-                    <strong>Note:</strong> In development, check your server console for the OTP code.
-                    In production, you'll receive it via SMS.
+                    <strong>Note:</strong> In development, check your server
+                    console for the OTP code. In production, you'll receive
+                    it via SMS.
                 </p>
             </div>
 
             {#if otpError}
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+                <div
+                    class="mb-4 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700"
+                    role="alert"
+                >
                     <p>{otpError}</p>
                 </div>
             {/if}
 
             {#if customerStore.error}
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+                <div
+                    class="mb-4 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700"
+                    role="alert"
+                >
                     <p>{customerStore.error}</p>
                 </div>
             {/if}
 
             <form onsubmit={handleVerifyOTP} class="space-y-6">
                 <div>
-                    <label for="phoneDisplay" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                        for="phoneDisplay"
+                        class="mb-2 block text-sm font-medium text-gray-700"
+                    >
                         Phone Number
                     </label>
                     <input
@@ -216,12 +272,15 @@
                         type="tel"
                         value={phone}
                         readonly
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
+                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-600"
                     />
                 </div>
 
                 <div>
-                    <label for="otp" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                        for="otp"
+                        class="mb-2 block text-sm font-medium text-gray-700"
+                    >
                         Enter OTP Code <span class="text-red-500">*</span>
                     </label>
                     <input
@@ -231,16 +290,18 @@
                         required
                         maxlength="4"
                         pattern="[0-9]{4}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-2xl tracking-widest"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-center text-2xl tracking-widest focus:border-transparent focus:ring-2 focus:ring-blue-500"
                         placeholder="0000"
                     />
-                    <p class="mt-1 text-xs text-gray-500">Enter the 4-digit code sent to your phone</p>
+                    <p class="mt-1 text-xs text-gray-500">
+                        Enter the 4-digit code sent to your phone
+                    </p>
                 </div>
 
                 <button
                     type="submit"
                     disabled={customerStore.loading}
-                    class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+                    class="w-full rounded-lg bg-blue-600 py-3 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
                 >
                     {customerStore.loading ? 'Verifying...' : 'Verify OTP'}
                 </button>
@@ -249,7 +310,7 @@
             <button
                 type="button"
                 onclick={backToRegister}
-                class="mt-4 w-full text-blue-600 hover:text-blue-800 font-medium"
+                class="mt-4 w-full font-medium text-blue-600 hover:text-blue-800"
             >
                 ← Back to Registration
             </button>

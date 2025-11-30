@@ -1,15 +1,9 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(mkdir:*)",
-      "Bash(tree:*)",
-      "Bash(cat:*)"
-    ],
-    "deny": [],
-    "ask": []
-  },
-  "enabledMcpjsonServers": [
-    "svelte"
-  ],
-  "enableAllProjectMcpServers": true
+    "permissions": {
+        "allow": ["Bash(mkdir:*)", "Bash(tree:*)", "Bash(cat:*)"],
+        "deny": [],
+        "ask": []
+    },
+    "enabledMcpjsonServers": ["svelte"],
+    "enableAllProjectMcpServers": true
 }

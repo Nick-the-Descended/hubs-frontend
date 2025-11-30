@@ -1,6 +1,9 @@
-import {sdk} from '$lib/sdk';
-import type {StoreCustomer} from '@medusajs/types';
-import { PUBLIC_MEDUSA_BACKEND_URL, PUBLIC_MEDUSA_PUBLISHABLE_KEY } from '$env/static/public';
+import { sdk } from '$lib/sdk';
+import type { StoreCustomer } from '@medusajs/types';
+import {
+    PUBLIC_MEDUSA_BACKEND_URL,
+    PUBLIC_MEDUSA_PUBLISHABLE_KEY
+} from '$env/static/public';
 
 class CustomerStore {
     customer = $state<StoreCustomer | null>(null);
@@ -41,10 +44,14 @@ class CustomerStore {
         this.error = null;
         try {
             // Step 1: Register auth identity using phone-auth provider (this gets us a JWT token)
-            const token = await sdk.auth.register('customer', 'phone-auth', {
-                phone: phone,
-                password: password
-            });
+            const token = await sdk.auth.register(
+                'customer',
+                'phone-auth',
+                {
+                    phone: phone,
+                    password: password
+                }
+            );
 
             // Step 2: Create customer using SDK with token
             const { customer } = await sdk.store.customer.create(
@@ -52,7 +59,7 @@ class CustomerStore {
                     email: email || `${phone}@placeholder.com`,
                     first_name: firstName,
                     last_name: lastName,
-                    phone: phone,
+                    phone: phone
                 },
                 {},
                 {
@@ -65,7 +72,8 @@ class CustomerStore {
 
             return {
                 customer: customer,
-                message: "Customer registered successfully. OTP sent to phone."
+                message:
+                    'Customer registered successfully. OTP sent to phone.'
             };
         } catch (err: any) {
             this.error = err.message;
@@ -95,7 +103,7 @@ class CustomerStore {
             await this.fetchCustomer();
 
             return {
-                message: "Phone number verified successfully"
+                message: 'Phone number verified successfully'
             };
         } catch (err: any) {
             this.error = err.message;
@@ -108,26 +116,35 @@ class CustomerStore {
     /**
      * Legacy email-based registration (kept for backward compatibility if needed)
      */
-    async registerLegacy(email: string, password: string, firstName: string, lastName: string) {
+    async registerLegacy(
+        email: string,
+        password: string,
+        firstName: string,
+        lastName: string
+    ) {
         this.loading = true;
         this.error = null;
         try {
-            const token = await sdk.auth.register('customer', 'emailpass', {
-                email,
-                password
-            });
-
-            const {customer} = await sdk.store.customer.create(
+            const token = await sdk.auth.register(
+                'customer',
+                'emailpass',
                 {
-                    "email": email,
-                    "first_name": firstName,
-                    "last_name": lastName
+                    email,
+                    password
+                }
+            );
+
+            const { customer } = await sdk.store.customer.create(
+                {
+                    email: email,
+                    first_name: firstName,
+                    last_name: lastName
                 },
                 {},
                 {
                     Authorization: `Bearer ${token}`
                 }
-            )
+            );
 
             this.customer = customer;
         } catch (err: any) {
@@ -145,7 +162,7 @@ class CustomerStore {
 
     async fetchCustomer() {
         try {
-            const {customer} = await sdk.store.customer.retrieve();
+            const { customer } = await sdk.store.customer.retrieve();
             this.customer = customer;
         } catch (err) {
             this.customer = null;

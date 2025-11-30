@@ -56,6 +56,7 @@ The app connects to a MedusaJS backend (configured via environment variables). T
 The app uses **Svelte 5 class-based stores** with runes in `src/lib/stores/`:
 
 #### Cart Store (`cart.svelte.ts`)
+
 - Manages shopping cart state using `$state` runes
 - Persists cart ID in localStorage (`medusa_cart_id`)
 - Provides methods: `initialize()`, `addItem()`, `updateItem()`, `removeItem()`, `complete()`
@@ -63,6 +64,7 @@ The app uses **Svelte 5 class-based stores** with runes in `src/lib/stores/`:
 - **Important**: `complete()` returns different structure based on success/failure with `type` field
 
 #### Customer Store (`customer.svelte.ts`)
+
 - Manages authentication and customer data with `$state` runes
 - Supports **phone-based registration** (experimental) with OTP verification
 - Methods: `login()`, `register()`, `verifyOTP()`, `logout()`, `fetchCustomer()`
@@ -105,6 +107,7 @@ Use `@/` for imports from lib (e.g., `import Button from "@/components/ui/button
 ### Routing
 
 SvelteKit file-based routing with dynamic parameters:
+
 - `/products/[categoryId]` - Category page
 - `/products/[categoryId]/[subCategoryId]` - Subcategory page
 - `/products/[categoryId]/[subCategoryId]/[itemId]` - Product detail page
@@ -119,6 +122,7 @@ The project uses **shadcn-svelte** for its UI component library. Components are 
 - **Header**: `src/lib/components/header/` - Site header component
 
 All shadcn-svelte components:
+
 - Use `tailwind-variants` (`tv()`) for variant definitions
 - Use `cn()` utility from `src/lib/utils.ts` (combines `clsx` and `tailwind-merge`)
 - Follow the `WithElementRef` pattern for proper ref handling
@@ -137,36 +141,43 @@ When adding new shadcn-svelte components, place them in `src/lib/components/ui/[
 ## Important Notes
 
 ### MedusaJS SDK Quirks
+
 - `sdk.store.cart.deleteLineItem()` returns `{ parent: cart }` instead of `{ cart }`
 - `sdk.store.cart.complete()` returns `{ type: 'order', order }` on success or `{ type: 'cart', cart, error }` on failure
 - Payment sessions are not yet implemented (see `cart.svelte.ts:181`)
 
 ### Authentication
+
 - The app supports both email/password and phone/OTP authentication
 - Phone-based auth is experimental and uses `phone-auth` provider
 - Session-based auth is configured in the SDK
 
 ### Environment Variables
+
 All environment variables must be prefixed with `PUBLIC_` to be exposed to the browser in SvelteKit.
 
 ### Svelte 5 Syntax
+
 - Use `$state`, `$derived`, `$props`, and `$effect` runes
 - Class-based stores instead of traditional Svelte stores
 - `{@render children()}` for layout children
 
 ### ESLint Configuration
+
 - Flat config format (`eslint.config.js`)
 - Extends TypeScript, Svelte, and Prettier configs
 - `no-undef` is disabled (handled by TypeScript)
 - Import extensions rule configured for `.js`, `.jsx`, `.ts`, `.tsx`
 
 ### Storybook
+
 - Configured for SvelteKit with CSF stories
 - Stories located in `src/stories/` and component directories
 - Addons: a11y, docs, vitest, svelte-csf
 
 ### Vite Configuration
+
 - MedusaJS SDK requires special handling:
-  - Included in `optimizeDeps.include`
-  - Added to `ssr.noExternal` for SSR compatibility
-  - ESBuild target set to `esnext`
+    - Included in `optimizeDeps.include`
+    - Added to `ssr.noExternal` for SSR compatibility
+    - ESBuild target set to `esnext`

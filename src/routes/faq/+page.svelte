@@ -1,8 +1,8 @@
 <script lang="ts">
-	// FAQ page logic
+    // FAQ page logic
 </script>
 
 <div class="container">
-	<h1>Frequently Asked Questions</h1>
-	<!-- Add FAQ items here -->
+    <h1>Frequently Asked Questions</h1>
+    <!-- Add FAQ items here -->
 </div>
