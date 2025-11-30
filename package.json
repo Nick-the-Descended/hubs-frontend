@@ -44,6 +44,9 @@
 	},
 	"dependencies": {
 		"@medusajs/js-sdk": "^2.11.2",
-		"@medusajs/types": "^2.11.2"
+		"@medusajs/types": "^2.11.2",
+		"embla-carousel": "^8.6.0",
+		"embla-carousel-autoplay": "^8.6.0",
+		"embla-carousel-svelte": "^8.6.0"
 	}
 }
