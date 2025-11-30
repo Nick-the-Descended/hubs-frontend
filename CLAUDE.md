@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **SvelteKit 2** e-commerce storefront application integrated with **MedusaJS** backend. The app uses Svelte 5 with runes for state management, TailwindCSS v4 for styling, and includes Storybook for component development.
+This is a **SvelteKit 2** e-commerce storefront application integrated with **MedusaJS** backend. The app uses Svelte 5 with runes for state management, TailwindCSS v4 for styling, **shadcn-svelte** for UI components, and includes Storybook for component development.
 
 ## Core Technologies
 
@@ -111,12 +111,21 @@ SvelteKit file-based routing with dynamic parameters:
 
 ### UI Components
 
-- **Button**: `src/lib/components/ui/button/` - Reusable button component
-- **Card**: `src/lib/components/ui/card/` - Card components with variants (header, content, footer, etc.)
+The project uses **shadcn-svelte** for its UI component library. Components are located in `src/lib/components/ui/` and follow the shadcn pattern:
+
+- **Button**: `src/lib/components/ui/button/` - Button component with variants (default, destructive, outline, secondary, ghost, link) and sizes
+- **Card**: `src/lib/components/ui/card/` - Card components with sub-components (header, content, footer, title, description, action)
 - **Slider**: `src/lib/components/slider/` - Image carousel using Embla Carousel
 - **Header**: `src/lib/components/header/` - Site header component
 
-Components use `tailwind-variants` and `tailwind-merge` for conditional styling.
+All shadcn-svelte components:
+- Use `tailwind-variants` (`tv()`) for variant definitions
+- Use `cn()` utility from `src/lib/utils.ts` (combines `clsx` and `tailwind-merge`)
+- Follow the `WithElementRef` pattern for proper ref handling
+- Export `VariantProps` types for TypeScript support
+- Are built for Svelte 5 with runes (`$props`, `$bindable`)
+
+When adding new shadcn-svelte components, place them in `src/lib/components/ui/[component-name]/` and use the `@/` alias for imports.
 
 ### Styling
 
