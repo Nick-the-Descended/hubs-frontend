@@ -46,13 +46,13 @@
 <div
     bind:this={ref}
     class={cn(
-        'group relative flex w-full max-w-sm flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition-shadow hover:shadow-md',
+        'group relative flex w-full flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition-shadow hover:shadow-md',
         className
     )}
     {...restProps}
 >
     <!-- Image Container -->
-    <div class="relative aspect-square w-full overflow-hidden bg-muted">
+    <div class="relative h-[190px] w-full overflow-hidden bg-muted lg:h-[360px]">
         <img
             src={imageUrl}
             alt={imageAlt}
@@ -101,7 +101,7 @@
                     >{rating.toFixed(1)}</span
                 >
                 <div class="flex items-center gap-0.5">
-                    {#each filledStarsArray as _}
+                    {#each filledStarsArray as _, i (i)}
                         <svg
                             class="h-5 w-5 fill-orange-400 text-orange-400"
                             xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +127,7 @@
                             />
                         </svg>
                     {/if}
-                    {#each emptyStarsArray as _}
+                    {#each emptyStarsArray as _, i (i)}
                         <svg
                             class="h-5 w-5 text-orange-400"
                             xmlns="http://www.w3.org/2000/svg"

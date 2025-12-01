@@ -38,9 +38,6 @@
         >
             {#each images as src, index (index)}
                 <div class="relative overflow-hidden sm:mx-1">
-                    <!--                    <p class="absolute top-[8px] right-[9px] grid place-items-center text-svelte w-12 h-12 bg-embla-carousel rounded-full">-->
-                    <!--                        {index + 1}-->
-                    <!--                    </p>-->
                     <img class="h-full w-full object-cover" {src} alt="" />
                 </div>
             {/each}
