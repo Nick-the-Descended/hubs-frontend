@@ -1,6 +1,7 @@
 <script lang="ts">
     import HeroSlider from '@/components/slider/Slider.svelte';
     import ProductCardSlider from '@/components/slider/ProductCardSlider.svelte';
+    import * as ProductCard from '@/components/ui/product-card';
 
     let hero_images = [
         '/hero-images/Image%201.png',

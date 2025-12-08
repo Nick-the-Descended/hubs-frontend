@@ -1,0 +1,13 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "search_placeholder": "მოძებნეთ პროდუქტები...",
+  "wishlist": "სურვილების სია",
+  "cart": "კალათა",
+  "cart_items": "{count} ნივთი",
+  "welcome": "მოგესალმებით",
+  "log_in": "შესვლა",
+  "my_account": "ჩემი ანგარიში",
+  "home": "მთავარი",
+  "lang_en": "English",
+  "lang_ka_ge": "ქართული"
+}

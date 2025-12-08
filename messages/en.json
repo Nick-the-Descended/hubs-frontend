@@ -1,0 +1,13 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "search_placeholder": "Search for products...",
+  "wishlist": "Wishlist",
+  "cart": "Cart",
+  "cart_items": "{count} items",
+  "welcome": "Welcome",
+  "log_in": "Log In",
+  "my_account": "My Account",
+  "home": "Home",
+  "lang_en": "English",
+  "lang_ka_ge": "ქართული"
+}

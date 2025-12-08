@@ -50,8 +50,8 @@
         onclick={onLeft}
     >
         <img
-            class="h-[26px] w-[26px] rotate-180"
-            src="/carousel-arrow.svg"
+            class="h-[26px] w-[26px]"
+            src="/icons/arrow-left.svg"
             alt="<"
         />
     </button>
@@ -60,7 +60,7 @@
         disabled={!emblaApi?.canScrollNext()}
         onclick={onRight}
     >
-        <img class="h-[26px] w-[26px]" src="/carousel-arrow.svg" alt=">" />
+        <img class="h-[26px] w-[26px]" src="/icons/arrow-right.svg" alt=">" />
     </button>
 
     <div class="absolute bottom-4 left-0 flex w-full justify-center gap-4">

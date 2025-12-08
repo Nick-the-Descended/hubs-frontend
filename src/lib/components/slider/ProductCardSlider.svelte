@@ -1,7 +1,7 @@
 <script lang="ts">
     import emblaCarouselSvelte from 'embla-carousel-svelte';
     import type { EmblaCarouselType } from 'embla-carousel';
-    import ProductCard from '@/components/ui/product-card/product-card.svelte';
+    import * as ProductCard from '@/components/ui/product-card';
 
     type Product = {
         id: string;
@@ -69,8 +69,8 @@
         aria-label="Previous products"
     >
         <img
-            class="h-[26px] w-[26px] rotate-180"
-            src="/carousel-arrow.svg"
+            class="h-[26px] w-[26px]"
+            src="/icons/arrow-left.svg"
             alt="<"
         />
     </button>
@@ -81,7 +81,7 @@
         onclick={onRight}
         aria-label="Next products"
     >
-        <img class="h-[26px] w-[26px]" src="/carousel-arrow.svg" alt=">" />
+        <img class="h-[26px] w-[26px]" src="/icons/arrow-right.svg" alt=">" />
     </button>
 
     <!-- Carousel Container -->
@@ -95,20 +95,38 @@
                 <div
                     class="h-[260px] w-[170px] flex-[0_0_170px] lg:h-[460px] lg:w-[400px] lg:flex-[0_0_400px]"
                 >
-                    <ProductCard
-                        class="h-full w-full"
-                        imageUrl={product.imageUrl}
-                        imageAlt={product.imageAlt}
-                        name={product.name}
-                        rating={product.rating}
-                        price={product.price}
-                        currency={product.currency}
-                        isFavorite={product.isFavorite}
-                        onFavoriteClick={() => onFavoriteClick?.(product.id)}
-                        onQuickViewClick={() =>
-                            onQuickViewClick?.(product.id)}
-                        onAddToCartClick={() => onAddToCartClick?.(product.id)}
-                    />
+                    <ProductCard.Root class="h-full w-full">
+                        <!-- Image Container -->
+                        <ProductCard.Image
+                            imageUrl={product.imageUrl}
+                            imageAlt={product.imageAlt}
+                        />
+
+                        <!-- Action Buttons Overlay -->
+                        <ProductCard.Actions
+                            onFavoriteClick={() => onFavoriteClick?.(product.id)}
+                            onQuickViewClick={() => onQuickViewClick?.(product.id)}
+                            onAddToCartClick={() => onAddToCartClick?.(product.id)}
+                            isFavorite={product.isFavorite}
+                        />
+
+                        <!-- Product Description -->
+                        <ProductCard.Description>
+                            <!-- Product Name -->
+                            <ProductCard.Title name={product.name} />
+
+                            <!-- Rating -->
+                            {#if product.rating && product.rating > 0}
+                                <ProductCard.Rating rating={product.rating} />
+                            {/if}
+
+                            <!-- Price and Add to Cart -->
+                            <ProductCard.Price
+                                price={product.price}
+                                currency={product.currency}
+                            />
+                        </ProductCard.Description>
+                    </ProductCard.Root>
                 </div>
             {/each}
         </div>
