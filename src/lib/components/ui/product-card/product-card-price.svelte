@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {WithElementRef} from "@/utils";
+    import {cn, type WithElementRef} from "@/utils";
     import type {HTMLAttributes} from "svelte/elements";
 
     type ProductCardPrice = WithElementRef<
@@ -7,7 +7,6 @@
     > & {
         currency?: string;
         price: string;
-
     };
 
     let {
@@ -19,7 +18,13 @@
     }: ProductCardPrice = $props();
 </script>
 
-<div class="flex items-center justify-between">
+<div
+        class={cn(
+        'flex items-center justify-between',
+        className
+    )}
+        {...restProps}
+>
     <div class="flex items-baseline gap-0.5">
                 <span class="text-3xl font-bold text-foreground"
                 >{price}</span

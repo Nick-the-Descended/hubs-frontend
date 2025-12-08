@@ -21,5 +21,5 @@ export {
     Actions as ProductCardActions,
     Price as ProductCardPrice,
     Title as ProductCardTitle,
-    Description as ProductCardDescription
+    Description as ProductCardDescription,
 };

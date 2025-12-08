@@ -1,21 +1,14 @@
 <script lang="ts">
-
     import {cn, type WithElementRef} from "@/utils";
     import type {HTMLAttributes} from "svelte/elements";
 
-    type ProductCardDescription = WithElementRef<
-        HTMLAttributes<HTMLDivElement>
-    > & {
-        rating?: number;
-
-    };
+    type ProductCardDescription = WithElementRef<HTMLAttributes<HTMLDivElement>>
 
     let {
         ref = $bindable(null),
         class: className,
         children,
         ...restProps
-
     }: ProductCardDescription = $props();
 
 </script>
