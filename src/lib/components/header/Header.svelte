@@ -5,11 +5,21 @@
     import * as m from '@/paraglide/messages';
 
     // Props with Svelte 5 runes for reactivity
+    interface NavigationItem {
+        label: string;
+        href: string;
+        subcategories?: Array<{
+            label: string;
+            href: string;
+            description?: string;
+        }>;
+    }
+
     interface Props {
         promotionalBanner?: string;
         logoUrl?: string;
         logoAlt?: string;
-        navigationItems: Array<{ label: string; href: string }>;
+        navigationItems: Array<NavigationItem>;
     }
 
     let {
@@ -22,6 +32,11 @@
     // Local state for search
     let searchQuery = $state('');
 
+    // Hover state for navigation overlay
+    let hoveredItemIndex = $state<number | null>(null);
+    let isOverlayHovered = $state(false);
+    let timeoutId: number | null = null;
+
     // Derived state for cart item count
     let cartItemCount = $derived(cartStore?.itemCount || 0);
     let isAuthenticated = $derived(customerStore.isAuthenticated);
@@ -32,6 +47,35 @@
         event.preventDefault();
         // Implement search functionality
         console.log('Searching for:', searchQuery);
+    }
+
+    function handleNavItemEnter(index: number) {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+        hoveredItemIndex = index;
+    }
+
+    function handleNavItemLeave() {
+        timeoutId = window.setTimeout(() => {
+            if (!isOverlayHovered) {
+                hoveredItemIndex = null;
+            }
+        }, 100);
+    }
+
+    function handleOverlayEnter() {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+        isOverlayHovered = true;
+    }
+
+    function handleOverlayLeave() {
+        isOverlayHovered = false;
+        hoveredItemIndex = null;
     }
 </script>
 
@@ -206,16 +250,18 @@
 
 <!-- Navigation Menu -->
 <nav
-        class="border-b border-gray-200 bg-white"
+        class="relative border-b border-gray-200 bg-white"
         aria-label="Main navigation"
 >
     <div class="container mx-auto px-4">
-        <ul class="flex items-center justify-between gap-6 py-3">
-            {#each navigationItems as item}
-                <li>
+        <ul class="flex items-center justify-center gap-12 py-3">
+            {#each navigationItems as item, index (item.href)}
+                <li class="relative">
                     <a
                             href={item.href}
-                            class="text-sm font-medium hover:text-gray-600"
+                            class="text-sm font-medium hover:text-gray-600 transition-colors"
+                            onmouseenter={() => handleNavItemEnter(index)}
+                            onmouseleave={handleNavItemLeave}
                     >
                         {item.label}
                     </a>
@@ -223,4 +269,36 @@
             {/each}
         </ul>
     </div>
+
+    <!-- Subcategory Overlay -->
+    {#if hoveredItemIndex !== null && navigationItems[hoveredItemIndex]?.subcategories}
+        {@const currentItem = navigationItems[hoveredItemIndex]}
+        <div
+                role="menu"
+                tabindex="-1"
+                class="absolute left-0 right-0 top-full z-50 bg-white border-t border-gray-200 shadow-lg animate-fade-in"
+                onmouseenter={handleOverlayEnter}
+                onmouseleave={handleOverlayLeave}
+        >
+            <div class="container mx-auto px-4 py-8">
+                <div class="grid grid-cols-4 gap-6">
+                    {#each currentItem.subcategories || [] as subcategory (subcategory.href)}
+                        <a
+                                href={subcategory.href}
+                                class="group block rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                        >
+                            <h3 class="text-sm font-semibold text-gray-900 group-hover:text-gray-600">
+                                {subcategory.label}
+                            </h3>
+                            {#if subcategory.description}
+                                <p class="mt-1 text-xs text-gray-500">
+                                    {subcategory.description}
+                                </p>
+                            {/if}
+                        </a>
+                    {/each}
+                </div>
+            </div>
+        </div>
+    {/if}
 </nav>
