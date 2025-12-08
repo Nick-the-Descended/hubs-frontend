@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
-import ProductCardWrapper from '@/components/ui/product-card/product-card-wrapper.svelte';
+import ProductCardWrapper from './product-card-wrapper.svelte';
 
 // Meta configuration for ProductCard stories
 const meta = {
-	title: 'Components/ProductCard/Wrapper',
+	title: 'Components/ProductCard',
 	component: ProductCardWrapper,
 	tags: ['autodocs'],
 	parameters: {
@@ -77,7 +77,6 @@ export const Default: Story = {
 		imageAlt: 'Sample product',
 		isFavorite: false,
 		showActions: true,
-		showRating: true
 	}
 };
 
@@ -93,7 +92,6 @@ export const SportsJersey: Story = {
 		imageAlt: 'Sports jersey',
 		isFavorite: false,
 		showActions: true,
-		showRating: true
 	}
 };
 
@@ -109,7 +107,6 @@ export const Favorited: Story = {
 		imageAlt: 'Favorite product',
 		isFavorite: true,
 		showActions: true,
-		showRating: true
 	}
 };
 
@@ -125,7 +122,6 @@ export const HighRating: Story = {
 		imageAlt: 'High rated product',
 		isFavorite: false,
 		showActions: true,
-		showRating: true
 	}
 };
 
@@ -141,7 +137,6 @@ export const LowRating: Story = {
 		imageAlt: 'Budget product',
 		isFavorite: false,
 		showActions: true,
-		showRating: true
 	}
 };
 
@@ -157,7 +152,6 @@ export const NoRating: Story = {
 		imageAlt: 'New product',
 		isFavorite: false,
 		showActions: true,
-		showRating: true
 	}
 };
 
@@ -173,7 +167,6 @@ export const WithoutActions: Story = {
 		imageAlt: 'Simple product',
 		isFavorite: false,
 		showActions: false,
-		showRating: true
 	}
 };
 
@@ -189,7 +182,6 @@ export const WithoutRating: Story = {
 		imageAlt: 'Product without rating',
 		isFavorite: false,
 		showActions: true,
-		showRating: false
 	}
 };
 
@@ -205,7 +197,6 @@ export const USDCurrency: Story = {
 		imageAlt: 'International product',
 		isFavorite: false,
 		showActions: true,
-		showRating: true
 	}
 };
 
@@ -221,7 +212,6 @@ export const EURCurrency: Story = {
 		imageAlt: 'European product',
 		isFavorite: false,
 		showActions: true,
-		showRating: true
 	}
 };
 
@@ -237,6 +227,5 @@ export const Minimal: Story = {
 		imageAlt: 'Minimal product',
 		isFavorite: false,
 		showActions: false,
-		showRating: false
 	}
 };

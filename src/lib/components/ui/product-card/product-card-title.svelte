@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {WithElementRef} from "@/utils";
+    import {cn, type WithElementRef} from "@/utils";
     import type {HTMLAttributes} from "svelte/elements";
 
     type ProductCardTitle = WithElementRef<
@@ -17,4 +17,10 @@
 
 </script>
 
-<h3 class="text-lg font-semibold text-foreground">{name}</h3>
+<h3
+        class={cn(
+        'text-lg font-semibold text-foreground',
+        className
+    )}
+        {...restProps}
+>{name}</h3>
