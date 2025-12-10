@@ -5,14 +5,23 @@
     import * as m from '@/paraglide/messages';
 
     // Props with Svelte 5 runes for reactivity
+    interface ProductType {
+        productType: string;
+        href: string;
+    }
+
+    interface Subcategory {
+        label: string;
+        href: string;
+        iconSrc?: string;
+        description?: string;
+        subcategories?: Array<ProductType>;
+    }
+
     interface NavigationItem {
         label: string;
         href: string;
-        subcategories?: Array<{
-            label: string;
-            href: string;
-            description?: string;
-        }>;
+        subcategories?: Array<Subcategory>;
     }
 
     interface Props {
@@ -145,20 +154,7 @@
                         class="hover:text-gray-600"
                         aria-label={m.wishlist()}
                 >
-                    <svg
-                            class="h-6 w-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            aria-hidden="true"
-                    >
-                        <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                        />
-                    </svg>
+                    <img src="/icons/heart.svg" alt="Wishlist" class="h-6 w-6" aria-hidden="true">
                 </a>
 
                 <!-- Cart -->
@@ -167,20 +163,7 @@
                         class="relative hover:text-gray-600"
                         aria-label="{m.cart()} - {m.cart_items({ count: cartItemCount })}"
                 >
-                    <svg
-                            class="h-6 w-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            aria-hidden="true"
-                    >
-                        <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                        />
-                    </svg>
+                    <img src="/icons/shopping-cart.svg" alt="Shopping Cart" class="h-6 w-6" aria-hidden="true">
                     {#if cartItemCount > 0}
 						<span
                                 class="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white"
@@ -198,24 +181,11 @@
                             class="flex items-center gap-2 hover:text-gray-600"
                             aria-label={m.my_account()}
                     >
-                        <svg
-                                class="h-6 w-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                        >
-                            <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                            />
-                        </svg>
                         <span class="text-sm">
 							<span class="block text-xs text-gray-500">{m.welcome()}</span>
 							<span class="font-medium">{customerName}</span>
 						</span>
+                        <img src="/icons/user.svg" alt="User" class="h-6 w-6">
                     </a>
                 {:else}
                     <a
@@ -223,24 +193,11 @@
                             class="flex items-center gap-2 hover:text-gray-600"
                             aria-label={m.log_in()}
                     >
-                        <svg
-                                class="h-6 w-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                        >
-                            <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                            />
-                        </svg>
                         <span class="text-sm">
 							<span class="block text-xs text-gray-500">{m.log_in()}</span>
 							<span class="font-medium">{m.my_account()}</span>
 						</span>
+                        <img src="/icons/user.svg" alt="User" class="h-6 w-6">
                     </a>
                 {/if}
             </div>
@@ -254,12 +211,12 @@
         aria-label="Main navigation"
 >
     <div class="container mx-auto px-4">
-        <ul class="flex items-center justify-center gap-12 py-3">
+        <ul class="flex items-center justify-start ml-16">
             {#each navigationItems as item, index (item.href)}
                 <li class="relative">
                     <a
                             href={item.href}
-                            class="text-sm font-medium hover:text-gray-600 transition-colors"
+                            class="block text-sm font-medium transition-colors px-4 py-4 hover:bg-gray-300/30 active:bg-gray-300/30"
                             onmouseenter={() => handleNavItemEnter(index)}
                             onmouseleave={handleNavItemLeave}
                     >
@@ -281,21 +238,49 @@
                 onmouseleave={handleOverlayLeave}
         >
             <div class="container mx-auto px-4 py-8">
-                <div class="grid grid-cols-4 gap-6">
+                <div class="grid grid-cols-4 gap-8">
                     {#each currentItem.subcategories || [] as subcategory (subcategory.href)}
-                        <a
-                                href={subcategory.href}
-                                class="group block rounded-lg p-4 hover:bg-gray-50 transition-colors"
-                        >
-                            <h3 class="text-sm font-semibold text-gray-900 group-hover:text-gray-600">
-                                {subcategory.label}
-                            </h3>
-                            {#if subcategory.description}
-                                <p class="mt-1 text-xs text-gray-500">
-                                    {subcategory.description}
-                                </p>
+                        <div class="space-y-3">
+                            <!-- Subcategory Header with Icon -->
+                            <a
+                                    href={subcategory.href}
+                                    class="group flex items-center gap-3 rounded-lg p-3 hover:bg-gray-50 transition-colors"
+                            >
+                                {#if subcategory.iconSrc}
+                                    <img
+                                            src={subcategory.iconSrc}
+                                            alt={subcategory.label}
+                                            class="h-6 w-6 object-contain flex-shrink-0 text-xs"
+                                    />
+                                {/if}
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-sm font-semibold text-gray-900 group-hover:text-gray-600 truncate">
+                                        {subcategory.label}
+                                    </h3>
+                                    {#if subcategory.description}
+                                        <p class="mt-0.5 text-xs text-gray-500 line-clamp-2">
+                                            {subcategory.description}
+                                        </p>
+                                    {/if}
+                                </div>
+                            </a>
+
+                            <!-- Product Types List -->
+                            {#if subcategory.subcategories && subcategory.subcategories.length > 0}
+                                <ul class="space-y-1 pl-3 border-l-2 border-gray-100">
+                                    {#each subcategory.subcategories as productType }
+                                        <li>
+                                            <a
+                                                    href={productType.href}
+                                                    class="block text-xs text-gray-600 hover:text-gray-900 py-1 px-2 rounded hover:bg-gray-50 transition-colors"
+                                            >
+                                                {productType.productType}
+                                            </a>
+                                        </li>
+                                    {/each}
+                                </ul>
                             {/if}
-                        </a>
+                        </div>
                     {/each}
                 </div>
             </div>

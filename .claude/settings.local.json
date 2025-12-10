@@ -4,7 +4,10 @@
       "Bash(mkdir:*)",
       "Bash(tree:*)",
       "Bash(cat:*)",
-      "mcp__svelte__svelte-autofixer"
+      "mcp__svelte__svelte-autofixer",
+      "WebFetch(domain:www.figma.com)",
+      "mcp__figma-desktop__get_design_context",
+      "mcp__figma-desktop__get_screenshot"
     ],
     "deny": [],
     "ask": []
