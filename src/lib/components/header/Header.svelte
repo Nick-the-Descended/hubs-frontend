@@ -71,7 +71,7 @@
             if (!isOverlayHovered) {
                 hoveredItemIndex = null;
             }
-        }, 100);
+        }, 200);
     }
 
     function handleOverlayEnter() {
@@ -233,7 +233,7 @@
         <div
                 role="menu"
                 tabindex="-1"
-                class="absolute left-0 right-0 top-full z-50 bg-white border-t border-gray-200 shadow-lg animate-fade-in"
+                class="absolute left-0 right-0 top-full z-50 bg-white shadow-lg animate-fade-in"
                 onmouseenter={handleOverlayEnter}
                 onmouseleave={handleOverlayLeave}
         >

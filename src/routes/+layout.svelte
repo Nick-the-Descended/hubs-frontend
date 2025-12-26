@@ -173,7 +173,7 @@
                 ]
             },
             {
-                label: 'აკულლები',
+                label: 'აქსესუარები',
                 href: '/products/accessories',
                 subcategories: [
                     {

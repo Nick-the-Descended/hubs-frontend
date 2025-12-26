@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="8c433bf7-1b37-4fda-afe8-7b142f612daf" name="alpine" url="http://dev.znagti.ge:5173">
+        <fileTransfer rootFolder="/home/niko/hubs" accessType="SFTP" host="10.147.20.169" port="22" sshConfigId="343507e9-b9f2-49c7-886e-3223fdf3e5d6" sshConfig="niko@10.147.20.169:22 agent" authAgent="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
