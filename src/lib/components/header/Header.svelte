@@ -7,6 +7,7 @@
     // Props with Svelte 5 runes for reactivity
     interface ProductType {
         productType: string;
+        label: string;
         href: string;
     }
 
@@ -101,7 +102,7 @@
         <div class="flex items-center justify-between gap-4">
             <!-- Logo -->
             <a href="/" class="flex-shrink-0" aria-label="Home">
-                <img src={logoUrl} alt={logoAlt} class="h-12 w-auto"/>
+                <img src={logoUrl||"/logo.svg"} alt={logoAlt||"Hubs.ge"} class="h-12 w-auto"/>
             </a>
 
             <!-- Search Bar -->
@@ -212,7 +213,7 @@
 >
     <div class="container mx-auto px-4">
         <ul class="flex items-center justify-start ml-16">
-            {#each navigationItems as item, index (item.href)}
+            {#each navigationItems as item, index (index)}
                 <li class="relative">
                     <a
                             href={item.href}
@@ -239,7 +240,7 @@
         >
             <div class="container mx-auto px-4 py-8">
                 <div class="grid grid-cols-4 gap-8">
-                    {#each currentItem.subcategories || [] as subcategory (subcategory.href)}
+                    {#each currentItem.subcategories || [] as subcategory, index (index)}
                         <div class="space-y-3">
                             <!-- Subcategory Header with Icon -->
                             <a
@@ -268,13 +269,13 @@
                             <!-- Product Types List -->
                             {#if subcategory.subcategories && subcategory.subcategories.length > 0}
                                 <ul class="space-y-1 pl-3 border-l-2 border-gray-100">
-                                    {#each subcategory.subcategories as productType }
+                                    {#each subcategory.subcategories as productType, index (index)}
                                         <li>
                                             <a
                                                     href={productType.href}
                                                     class="block text-xs text-gray-600 hover:text-gray-900 py-1 px-2 rounded hover:bg-gray-50 transition-colors"
                                             >
-                                                {productType.productType}
+                                                {productType.label}
                                             </a>
                                         </li>
                                     {/each}

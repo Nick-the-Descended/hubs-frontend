@@ -1,0 +1,5 @@
+schema: https://cms.znagti.ge/graphql
+generates:
+  src/lib/types/strapi-generated.ts:
+    plugins:
+      - typescript

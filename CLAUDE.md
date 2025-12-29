@@ -51,6 +51,43 @@ The app connects to a MedusaJS backend (configured via environment variables). T
 - **Publishable Key**: `PUBLIC_MEDUSA_PUBLISHABLE_KEY`
 - **Auth Type**: Session-based authentication
 
+### Strapi CMS Integration
+
+The app integrates with a Strapi headless CMS for managing content (blog posts, pages, marketing content). The client is initialized in `src/lib/strapi.ts` and uses **GraphQL** (via @urql/svelte) for data fetching:
+
+- **Backend URL**: `PUBLIC_STRAPI_URL` (https://cms.znagti.ge)
+- **API Token**: `PUBLIC_STRAPI_API_TOKEN` (read-only access)
+- **Usage**: CMS content only (MedusaJS handles product data)
+- **Implementation**: GraphQL-based using @urql/svelte with cacheExchange and fetchExchange
+
+#### Strapi Client API
+
+The Strapi client provides three main methods:
+
+- `strapi.find(contentType, params)` - Fetch a collection of entries with filtering, sorting, and pagination
+- `strapi.findOne(contentType, id, params)` - Fetch a single entry by ID
+- `strapi.findByField(contentType, field, value, params)` - Fetch a single entry by a unique field (e.g., slug)
+
+All methods support:
+- **Population**: Include related content (e.g., author, cover image)
+- **Filtering**: Filter by field values
+- **Sorting**: Sort results by one or more fields
+- **Pagination**: Page-based or offset-based pagination
+
+See `src/lib/strapi-examples.md` for detailed usage examples.
+
+#### TypeScript Types
+
+Strapi response types are defined in `src/lib/types/strapi.ts`:
+
+- `StrapiEntity<T>` - Generic entity structure
+- `StrapiSingleResponse<T>` - Response for a single entity
+- `StrapiCollectionResponse<T>` - Response for a collection of entities
+- `StrapiMedia` - Media/file structure
+- Example content types: `ArticleAttributes`, `PageAttributes`, etc.
+
+**Important**: Always fetch Strapi data in `+page.server.ts` or `+layout.server.ts` files to keep the API token secure and avoid exposing it to the client.
+
 ### State Management with Svelte 5 Runes
 
 The app uses **Svelte 5 class-based stores** with runes in `src/lib/stores/`:
@@ -83,7 +120,11 @@ src/
 │   │   ├── header/       # Header component
 │   │   └── slider/       # Image carousel slider (Embla Carousel)
 │   ├── stores/           # Svelte 5 state stores
+│   ├── types/            # TypeScript type definitions
+│   │   └── strapi.ts     # Strapi CMS types
 │   ├── sdk.ts            # MedusaJS SDK initialization
+│   ├── strapi.ts         # Strapi CMS client
+│   ├── strapi-examples.md # Strapi usage examples
 │   └── utils.ts          # Utility functions (clsx, tailwind-merge)
 ├── routes/
 │   ├── +layout.svelte    # Root layout (initializes stores)
