@@ -1,15 +1,22 @@
-import { strapi } from '$lib/strapi';
-import type { Header } from '$lib/types/strapi-generated';
-import type { LayoutServerLoad } from './$types';
+import {strapi, mapParaglideLocaleToStrapi} from '$lib/strapi';
+import type {Header} from '$lib/types/strapi-generated';
+import type {LayoutServerLoad} from './$types';
+import {getLocale} from '$lib/paraglide/runtime';
 
 export const load: LayoutServerLoad = async () => {
-	try {
-		// Fetch header data from Strapi (single-type content)
-		const headerData = await strapi.findSingle<Header>('header', {
-			fields: [
-				'promotionalBanner',
-				'logoAlt',
-				`navigationItems {
+    try {
+        // Get current locale from Paraglide and map to Strapi format
+        const locale = getLocale();
+        console.log(locale)
+        const strapiLocale = mapParaglideLocaleToStrapi(locale);
+
+        // Fetch header data from Strapi (single-type content)
+        const headerData = await strapi.findSingle<Header>('header', {
+            locale: strapiLocale,
+            fields: [
+                'promotionalBanner',
+                'logoAlt',
+                `navigationItems {
 					id
 					label
 					href
@@ -38,188 +45,886 @@ export const load: LayoutServerLoad = async () => {
 						}
 					}
 				}`
-			]
-		});
+            ]
+        });
 
-		if (!headerData) {
-			console.warn('No header data found in Strapi');
-			return {
-				header: getFallbackHeader()
-			};
-		}
+        if (!headerData) {
+            console.warn('No header data found in Strapi');
+            return {
+                header: getFallbackHeader()
+            };
+        }
 
-		return {
-			header: headerData
-		};
-	} catch (error) {
-		console.error('Error fetching header from Strapi:', error);
-		// Return fallback header data if Strapi fetch fails
-		return {
-			header: getFallbackHeader()
-		};
-	}
+        return {
+            header: headerData
+        };
+    } catch (error) {
+        console.error('Error fetching header from Strapi:', error);
+        // Return fallback header data if Strapi fetch fails
+        return {
+            header: getFallbackHeader()
+        };
+    }
 };
 
 // Fallback header data in case Strapi is unavailable
 function getFallbackHeader(): Partial<Header> {
-	return {
-		promotionalBanner: 'Discount promotion/seasonal offer/....',
-		logoUrl: '/logo.svg',
-		logoAlt: 'HubsGe',
-		navigationItems: [
-			{
-				label: 'ფან-შოპი',
-				href: '/products/fan-shop',
-				subcategories: [
-					{
-						label: 'ფეხბურთის ნაკრები',
-						href: '/products/fan-shop/football',
-						iconSrc: '/nav/icon.png',
-						subcategories: [
-							{
-								productType: 'მაისური',
-								href: '/'
-							}
-						]
-					},
-					{
-						label: 'იბერია 1999',
-						href: '/products/fan-shop/iberia',
-						iconSrc: '/nav/icon.png',
-						subcategories: [
-							{ productType: 'მაისური', href: '/' },
-							{ productType: 'საგულშემატკივრო მაისური', href: '/' },
-							{ productType: 'აქსესუარები', href: '/' }
-						]
-					},
-					{
-						label: 'ტორპედო ქუთაისი',
-						href: '/products/fan-shop/torpedo-kutaisi',
-						iconSrc: '/nav/icon.png',
-						subcategories: [
-							{ productType: 'მაისური', href: '/' },
-							{ productType: 'მოსაცმელი', href: '/' }
-						]
-					},
-					{
-						label: 'დინამო თბილისი',
-						href: '/products/fan-shop/dinamo-tbilisi',
-						iconSrc: '/nav/icon.png',
-						subcategories: [{ productType: 'მაისური', href: '/' }]
-					},
-					{
-						label: 'კალათბურთის ეროვნული ნაკრები',
-						href: '/products/fan-shop/basketball',
-						iconSrc: '/nav/icon.png',
-						subcategories: [
-							{ productType: 'მაისური', href: '/' },
-							{ productType: 'მოსაცმელი', href: '/' },
-							{ productType: 'შორტი', href: '/' },
-							{ productType: 'ფან-მაისური', href: '/' },
-							{ productType: 'სვიტერი', href: '/' },
-							{ productType: 'აქსესუარები', href: '/' }
-						]
-					},
-					{
-						label: 'რაგბის ეროვნული ნაკრები',
-						href: '/products/fan-shop/american-football',
-						iconSrc: '/nav/icon.png',
-						subcategories: [
-							{ productType: 'მაისური', href: '/' },
-							{ productType: 'შარვალი', href: '/' },
-							{ productType: 'მოსაცმელი', href: '/' },
-							{ productType: 'ქურთუკი', href: '/' },
-							{ productType: 'აქსესუარები', href: '/' }
-						]
-					}
-				]
-			},
-			{
-				label: 'ფიხტანი',
-				href: '/products/fixtures',
-				subcategories: [
-					{
-						label: 'სამზარეულო',
-						href: '/products/fixtures/kitchen',
-						description: 'ონკანები და სამზარეულო აქსესუარები'
-					},
-					{ label: 'სააბაზანო', href: '/products/fixtures/bathroom', description: 'ონკანები და ხელსაბანი' },
-					{ label: 'შხაპები', href: '/products/fixtures/showers' },
-					{ label: 'ნიჟარები', href: '/products/fixtures/sinks' }
-				]
-			},
-			{
-				label: 'კალენი',
-				href: '/products/stairs',
-				subcategories: [
-					{ label: 'შიდა კიბეები', href: '/products/stairs/indoor', description: 'კიბეები შიდა სივრცისთვის' },
-					{ label: 'გარე კიბეები', href: '/products/stairs/outdoor', description: 'ამინდგამძლე კიბეები' },
-					{ label: 'სახელურები', href: '/products/stairs/railings' },
-					{ label: 'კიბის საფეხურები', href: '/products/stairs/treads' }
-				]
-			},
-			{
-				label: 'ბრენდები',
-				href: '/products/brands',
-				subcategories: [
-					{
-						label: 'პრემიუმ ბრენდები',
-						href: '/products/brands/premium',
-						description: 'მაღალი ხარისხის ბრენდები'
-					},
-					{ label: 'ეკონომ ბრენდები', href: '/products/brands/economy', description: 'ხელმისაწვდომი ფასები' },
-					{ label: 'ადგილობრივი ბრენდები', href: '/products/brands/local' },
-					{ label: 'საერთაშორისო ბრენდები', href: '/products/brands/international' }
-				]
-			},
-			{
-				label: 'მაგაზიები',
-				href: '/stores',
-				subcategories: [
-					{ label: 'თბილისი', href: '/stores/tbilisi', description: 'მაღაზიები დედაქალაქში' },
-					{ label: 'ბათუმი', href: '/stores/batumi' },
-					{ label: 'ქუთაისი', href: '/stores/kutaisi' },
-					{ label: 'რუსთავი', href: '/stores/rustavi' }
-				]
-			},
-			{
-				label: 'ქალი',
-				href: '/products/women',
-				subcategories: [
-					{ label: 'ტანსაცმელი', href: '/products/women/clothing', description: 'კაბები, ბლუზები, შარვლები' },
-					{ label: 'ფეხსაცმელი', href: '/products/women/shoes' },
-					{ label: 'ჩანთები', href: '/products/women/bags' },
-					{ label: 'აქსესუარები', href: '/products/women/accessories' }
-				]
-			},
-			{
-				label: 'ფიტდაკოსმეტი',
-				href: '/products/fitness-cosmetics',
-				subcategories: [
-					{
-						label: 'ფიტნეს აქსესუარები',
-						href: '/products/fitness/accessories',
-						description: 'სავარჯიშო აღჭურვილობა'
-					},
-					{ label: 'კოსმეტიკა', href: '/products/cosmetics', description: 'სხეულის მოვლის საშუალებები' },
-					{ label: 'ვიტამინები', href: '/products/fitness/vitamins' },
-					{ label: 'სპორტული კვება', href: '/products/fitness/nutrition' }
-				]
-			},
-			{
-				label: 'აქსესუარები',
-				href: '/products/accessories',
-				subcategories: [
-					{
-						label: 'სახლის აქსესუარები',
-						href: '/products/accessories/home',
-						description: 'დეკორაციული ელემენტები'
-					},
-					{ label: 'სამზარეულოს აქსესუარები', href: '/products/accessories/kitchen' },
-					{ label: 'სააბაზანოს აქსესუარები', href: '/products/accessories/bathroom' },
-					{ label: 'ორგანაიზერები', href: '/products/accessories/organizers' }
-				]
-			}
-		]
-	};
+    return {
+        "documentId": "mur84ihub0w8jxv1jo04qp2f",
+        "logoAlt": "Hubs.ge",
+        "promotionalBanner": "20% ფასდაკლება",
+        "logoUrl": null,
+        "navigationItems":
+            [
+                {
+                    "id": "19",
+                    "label": "ფეხბურთი",
+                    "href": "#",
+                    "subcategories": [
+                        {
+                            "id": "39",
+                            "label": "ბუცი",
+                            "href": "#",
+                            "iconSrc": "https://cms.znagti.ge/uploads/ID_0918_10_FOOTWEAR_3_D_Rendering_Side_Lateral_Left_View_transparent_87ce6d5779.png",
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "73",
+                                    "label": "Elite",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": [
+                                        {
+                                            "id": "1",
+                                            "label": "Pro",
+                                            "href": "#",
+                                            "iconSrc": null,
+                                            "description": null,
+                                            "productType": null
+                                        },
+                                        {
+                                            "id": "2",
+                                            "label": "Academy/League",
+                                            "href": "#",
+                                            "iconSrc": null,
+                                            "description": null,
+                                            "productType": null
+                                        },
+                                        {
+                                            "id": "3",
+                                            "label": "Club",
+                                            "href": "#",
+                                            "iconSrc": null,
+                                            "description": null,
+                                            "productType": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": "21",
+                            "label": "ეკიპირება",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "13",
+                                    "label": "მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "14",
+                                    "label": "თერმო მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "15",
+                                    "label": "შორტი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "22",
+                            "label": "აქსესუარები",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "16",
+                                    "label": "მეკარის ხელთათმანები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "17",
+                                    "label": "დამცავები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "18",
+                                    "label": "წინდები & გეტრები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "19",
+                                    "label": "ჩანთა",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "19",
+                            "label": "ბურთი",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": []
+                        },
+                        {
+                            "id": "23",
+                            "label": "შიპოვკა",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "20",
+                                    "label": "Pro",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "21",
+                                    "label": "Academy/League",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "22",
+                                    "label": "Club",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "15",
+                    "label": "ფან-შოპი",
+                    "href": "#",
+                    "subcategories": [
+                        {
+                            "id": "24",
+                            "label": "ფეხბურთის ეროვნული ნაკრები",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "23",
+                                    "label": "მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "25",
+                            "label": "რაგბის ეროვნული ნაკრები",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "24",
+                                    "label": "მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "25",
+                                    "label": "შარვალი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "26",
+                                    "label": "მოსაცმელი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "27",
+                                    "label": "ქურთუკი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "28",
+                                    "label": "აქსესუარები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "26",
+                            "label": "დინამო თბილისი",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "29",
+                                    "label": "მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "27",
+                            "label": "იბერია 1999",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "30",
+                                    "label": "მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "31",
+                                    "label": "საგულშემატკივრო აქსესუარები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "32",
+                                    "label": "აქსესუარები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "28",
+                            "label": "ტორპედო ქუთაისი",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "33",
+                                    "label": "მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "34",
+                                    "label": "მოსაცმელი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "29",
+                            "label": "კალათბურთის ეროვნული ნაკრები",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "35",
+                                    "label": "მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "36",
+                                    "label": "მოსაცმელი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "37",
+                                    "label": "შორტი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "38",
+                                    "label": "ფან მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "39",
+                                    "label": "სვიტერი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "40",
+                                    "label": "აქსესუარები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "11",
+                    "label": "ბრენდები",
+                    "href": "#",
+                    "subcategories": []
+                },
+                {
+                    "id": "16",
+                    "label": "მამაკაცი",
+                    "href": "#",
+                    "subcategories": [
+                        {
+                            "id": "30",
+                            "label": "ფეხსაცმელი",
+                            "href": "#",
+                            "iconSrc": "https://cms.znagti.ge/uploads/ID_0918_10_FOOTWEAR_3_D_Rendering_Side_Lateral_Left_View_transparent_87ce6d5779.png",
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "41",
+                                    "label": "ყოველდღიური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "42",
+                                    "label": "სპორტული",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "43",
+                                    "label": "სანდლები & ჩუსტები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "31",
+                            "label": "ტანსაცმელი",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "44",
+                                    "label": "მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "45",
+                                    "label": "შარვალი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "46",
+                                    "label": "ჰუდი & სვიტერი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "47",
+                                    "label": "მოსაცმელი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "48",
+                                    "label": "ქურთუკი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "32",
+                            "label": "აქსესუარაები",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "49",
+                                    "label": "წინდები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "50",
+                                    "label": "ქუდი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "51",
+                                    "label": "ჩანთა",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "52",
+                                    "label": "საცვლები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "53",
+                                    "label": "თერმოსები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "17",
+                    "label": "ქალი",
+                    "href": "#",
+                    "subcategories": [
+                        {
+                            "id": "33",
+                            "label": "ფეხსაცმელი",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "54",
+                                    "label": "ყოველდღიური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "55",
+                                    "label": "სპორტული",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "56",
+                                    "label": "სანდლები & ჩუსტები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "34",
+                            "label": "ტანსაცმელი",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "57",
+                                    "label": "მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "58",
+                                    "label": "შარვალი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "59",
+                                    "label": "ჰუდი & სვიტერი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "60",
+                                    "label": "მოსაცმელი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "61",
+                                    "label": "ქურთუკი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "35",
+                            "label": "აქსესუარები",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "62",
+                                    "label": "წინდები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "63",
+                                    "label": "ქუდი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "64",
+                                    "label": "ჩანთა",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "65",
+                                    "label": "საცვლები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "66",
+                                    "label": "თერმოსები",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "18",
+                    "label": "პადელი",
+                    "href": "#",
+                    "subcategories": [
+                        {
+                            "id": "36",
+                            "label": "მამაკაცი",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "67",
+                                    "label": "მაისური",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "68",
+                                    "label": "შორტი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "37",
+                            "label": "ქალი",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "69",
+                                    "label": "მაისური & ტოპი",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "70",
+                                    "label": "შორტი & კაბა",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "20",
+                            "label": "ჩოგანი",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": []
+                        },
+                        {
+                            "id": "38",
+                            "label": "აქსესუარები",
+                            "href": "#",
+                            "iconSrc": null,
+                            "description": null,
+                            "productType": null,
+                            "subcategories": [
+                                {
+                                    "id": "71",
+                                    "label": "ჩანთა",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                },
+                                {
+                                    "id": "72",
+                                    "label": "სხვა",
+                                    "href": "#",
+                                    "iconSrc": null,
+                                    "description": null,
+                                    "productType": null,
+                                    "subcategories": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "12",
+                    "label": "საბრძოლო ხელოვნებები",
+                    "href": "#",
+                    "subcategories": []
+                },
+                {
+                    "id": "13",
+                    "label": "ფასდაკლება",
+                    "href": "#",
+                    "subcategories": []
+                },
+                {
+                    "id": "14",
+                    "label": "Outlet",
+                    "href": "#",
+                    "subcategories": []
+                }
+            ],
+        "localizations":
+            [
+                {
+                    "locale": "en",
+                    documentId: "",
+                    localizations: []
+                }
+            ]
+    };
 }

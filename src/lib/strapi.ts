@@ -2,6 +2,18 @@ import {PUBLIC_STRAPI_URL, PUBLIC_STRAPI_API_TOKEN} from '$env/static/public';
 import {Client, cacheExchange, fetchExchange} from '@urql/svelte';
 
 /**
+ * Map Paraglide locale codes to Strapi locale codes
+ * Paraglide uses hyphenated format (e.g., 'ka-ge'), Strapi uses underscore (e.g., 'ka_GE')
+ */
+export function mapParaglideLocaleToStrapi(paraglideLocale: string): string {
+    if (paraglideLocale.includes('-')) {
+        const parts = paraglideLocale.split('-');
+        return `${parts[0]}-${parts[1].toUpperCase()}`;
+    }
+    return paraglideLocale;
+}
+
+/**
  * Strapi GraphQL client for fetching CMS content
  */
 class StrapiClient {

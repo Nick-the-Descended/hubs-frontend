@@ -73,8 +73,30 @@ All methods support:
 - **Filtering**: Filter by field values
 - **Sorting**: Sort results by one or more fields
 - **Pagination**: Page-based or offset-based pagination
+- **Locale**: Fetch content in specific language (e.g., 'en', 'ka_GE')
 
 See `src/lib/strapi-examples.md` for detailed usage examples.
+
+#### Internationalization with Strapi
+
+To fetch localized content from Strapi, use the `locale` parameter with Paraglide's `getLocale()`:
+
+```typescript
+import { getLocale } from '$lib/paraglide/runtime';
+import { strapi, mapParaglideLocaleToStrapi } from '$lib/strapi';
+
+export const load = async () => {
+    const locale = getLocale();
+    const strapiLocale = mapParaglideLocaleToStrapi(locale);
+
+    const data = await strapi.findSingle('header', {
+        locale: strapiLocale,
+        fields: ['title', 'description']
+    });
+};
+```
+
+The `mapParaglideLocaleToStrapi()` helper converts Paraglide locale codes ('en', 'ka-ge') to Strapi format ('en', 'ka_GE').
 
 #### TypeScript Types
 
