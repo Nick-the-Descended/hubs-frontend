@@ -1,113 +1,74 @@
 import {strapi, mapParaglideLocaleToStrapi} from '$lib/strapi';
 import {getLocale} from '$lib/paraglide/runtime';
 import type {PageServerLoad} from './$types';
-import {readFileSync} from 'fs';
-import {join} from 'path';
+import type {FanShop, Header} from '$lib/types/strapi-generated';
 
-// Read the GraphQL query from the file
-const FAN_SHOP_QUERY = `
-query FanShop($locale: I18NLocaleCode) {
-    fanShop(locale: $locale) {
-        slug
-        Banner {
-            id
-            Image {
-                width
-                height
-                ext
-                url
-                name
-            }
-            buttonText
-        }
-        productListTitle
-        seeMore
-        productList {
-            id
-            productImage {
-                width
-                height
-                ext
-                url
-                name
-            }
-            productName
-            slug
-            price
-            discountedPrice
-            averageRating
-            discountPercent
-            isFavourite
-        }
-    }
-}
-`;
-
-interface FanShopImage {
-    width: number;
-    height: number;
-    ext: string;
-    url: string;
-    name: string;
-}
-
-interface FanShopBanner {
-    id: string;
-    Image: FanShopImage;
-    buttonText: string;
-}
-
-interface FanShopProduct {
-    id: string;
-    productImage: FanShopImage;
-    productName: string;
-    slug: string;
-    price: number;
-    discountedPrice: number | null;
-    averageRating: number;
-    discountPercent: number | null;
-    isFavourite: boolean;
-}
-
-interface FanShopData {
-    slug: string;
-    Banner: FanShopBanner;
-    productListTitle: string;
-    seeMore: string;
-    productList: FanShopProduct[];
-}
-
-interface FanShopResponse {
-    fanShop: FanShopData;
-}
-
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({parent}) => {
     try {
+        // Get header data from parent layout
+        const {header} = await parent();
+
         // Get current locale from Paraglide and map to Strapi format
         const locale = getLocale();
         console.log('Fan Shop Page - Locale:', locale);
         const strapiLocale = mapParaglideLocaleToStrapi(locale);
 
-        // Execute the custom GraphQL query
-        const data = await strapi.query<FanShopResponse>(FAN_SHOP_QUERY, {
-            locale: strapiLocale
+        // Fetch fan shop data from Strapi (single-type content)
+        const fanShopData = await strapi.findSingle<FanShop>('fanShop', {
+            locale: strapiLocale,
+            fields: [
+                'slug',
+                'productListTitle',
+                'seeMore',
+                `Banner {
+                    id
+                    buttonText
+                    Image {
+                        width
+                        height
+                        ext
+                        url
+                        name
+                    }
+                }`,
+                `productList {
+                    id
+                    productImage {
+                        width
+                        height
+                        ext
+                        url
+                        name
+                    }
+                    productName
+                    slug
+                    price
+                    discountedPrice
+                    averageRating
+                    discountPercent
+                    isFavourite
+                }`
+            ]
         });
 
-        if (!data?.fanShop) {
+        if (!fanShopData) {
             console.warn('No fan shop data found in Strapi');
             return {
-                fanShop: null
+                fanShop: null,
+                navigationItems: header?.navigationItems || []
             };
         }
 
         return {
-            fanShop: data.fanShop
+            fanShop: fanShopData,
+            navigationItems: header?.navigationItems || []
         };
     } catch (error) {
         console.error('Error fetching fan shop data from Strapi:', error);
         // Return null data if Strapi fetch fails
         return {
-            fanShop: null
+            fanShop: null,
+            navigationItems: []
         };
     }
 };

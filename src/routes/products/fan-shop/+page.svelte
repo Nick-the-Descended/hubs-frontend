@@ -1,9 +1,9 @@
 <script lang="ts">
     import type {PageData} from './$types';
+    import {PUBLIC_STRAPI_URL} from '$env/static/public';
 
     let {data}: {data: PageData} = $props();
 
-    // Destructure fan shop data
     const fanShop = $derived(data.fanShop);
 </script>
 
@@ -15,7 +15,7 @@
         {#if fanShop.Banner}
             <div class="banner">
                 <img
-                    src={fanShop.Banner.Image.url}
+                    src={PUBLIC_STRAPI_URL + fanShop.Banner.Image.url}
                     alt={fanShop.Banner.Image.name}
                     width={fanShop.Banner.Image.width}
                     height={fanShop.Banner.Image.height}
@@ -29,7 +29,7 @@
             {#each fanShop.productList as product}
                 <div class="product-card" data-product-id={product.id}>
                     <img
-                        src={product.productImage.url}
+                        src={PUBLIC_STRAPI_URL + product.productImage.url}
                         alt={product.productName}
                         width={product.productImage.width}
                         height={product.productImage.height}

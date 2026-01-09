@@ -20,8 +20,6 @@
         navigationItems
     }: Props = $props();
 
-    $inspect('navigationItems', navigationItems[1].subcategories[0])
-
     // Local state for search
     let searchQuery = $state('');
 
