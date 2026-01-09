@@ -118,6 +118,29 @@ export type CategoryRelationResponseCollection = {
   nodes: Array<Category>;
 };
 
+export type ComponentBrandsBrands = {
+  __typename?: 'ComponentBrandsBrands';
+  brandImage: Array<Maybe<UploadFile>>;
+  brandImage_connection?: Maybe<UploadFileRelationResponseCollection>;
+  id: Scalars['ID']['output'];
+  seeMore?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type ComponentBrandsBrandsBrandImageArgs = {
+  filters?: InputMaybe<UploadFileFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ComponentBrandsBrandsBrandImage_ConnectionArgs = {
+  filters?: InputMaybe<UploadFileFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 export type ComponentDefaultFanshop = {
   __typename?: 'ComponentDefaultFanshop';
   Image?: Maybe<UploadFile>;
@@ -560,7 +583,7 @@ export type FloatFilterInput = {
   startsWith?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type GenericMorph = Category | ComponentDefaultFanshop | ComponentDefaultHomePageSliderBanners | ComponentDefaultNavigationItem | ComponentDefaultNavigationSubcategory | ComponentDefaultNavigationSubcategoryLevel3 | ComponentDefaultOffers | ComponentDefaultServiceInformation | ComponentFanShopBanner | ComponentFanShopProductItem | FanShop | FastView | Header | HomePage | I18NLocale | Product | Review | ReviewWorkflowsWorkflow | ReviewWorkflowsWorkflowStage | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
+export type GenericMorph = Category | ComponentBrandsBrands | ComponentDefaultFanshop | ComponentDefaultHomePageSliderBanners | ComponentDefaultNavigationItem | ComponentDefaultNavigationSubcategory | ComponentDefaultNavigationSubcategoryLevel3 | ComponentDefaultOffers | ComponentDefaultServiceInformation | ComponentFanShopBanner | ComponentFanShopProductItem | FanShop | FastView | Header | HomePage | I18NLocale | Product | Review | ReviewWorkflowsWorkflow | ReviewWorkflowsWorkflowStage | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
 
 export type Header = {
   __typename?: 'Header';
