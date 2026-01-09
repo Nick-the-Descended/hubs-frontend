@@ -233,7 +233,20 @@ class StrapiClient {
         if (params?.publicationState) variables.publicationState = params.publicationState;
         if (params?.locale) variables.locale = params.locale;
 
+        console.log('🔍 Strapi GraphQL Request (find):', {
+            contentType,
+            query: query.trim(),
+            variables,
+            params
+        });
+
         const result = await this.client.query(query, variables).toPromise();
+
+        console.log('✅ Strapi GraphQL Response (find):', {
+            contentType,
+            error: result.error,
+            data: result.data
+        });
 
         if (result.error) {
             throw new Error(`Strapi GraphQL error: ${result.error.message}`);
@@ -366,6 +379,34 @@ class StrapiClient {
 
         const responseData = result.data?.[contentType];
         return responseData || null;
+    }
+
+    /**
+     * Execute a custom GraphQL query
+     * @param query - The GraphQL query string
+     * @param variables - Optional query variables
+     */
+    async query<T = any>(
+        query: string,
+        variables?: Record<string, any>
+    ): Promise<T> {
+        console.log('🔍 Strapi Custom GraphQL Query:', {
+            query: query.trim(),
+            variables
+        });
+
+        const result = await this.client.query(query, variables || {}).toPromise();
+
+        console.log('✅ Strapi Custom GraphQL Response:', {
+            error: result.error,
+            data: result.data
+        });
+
+        if (result.error) {
+            throw new Error(`Strapi GraphQL error: ${result.error.message}`);
+        }
+
+        return result.data as T;
     }
 }
 

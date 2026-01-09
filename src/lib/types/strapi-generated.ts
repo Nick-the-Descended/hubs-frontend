@@ -215,99 +215,49 @@ export type ComponentDefaultNavigationItemInput = {
 
 export type ComponentDefaultNavigationSubcategory = {
   __typename?: 'ComponentDefaultNavigationSubcategory';
-  description?: Maybe<Scalars['String']['output']>;
+  hasIcon: Scalars['Boolean']['output'];
   href: Scalars['String']['output'];
-  iconSrc?: Maybe<Scalars['String']['output']>;
+  icon?: Maybe<UploadFile>;
   id: Scalars['ID']['output'];
   label: Scalars['String']['output'];
-  productType?: Maybe<Scalars['String']['output']>;
-  subcategories?: Maybe<Array<Maybe<ComponentDefaultNavigationSubcategoryLevel2>>>;
+  subcategories?: Maybe<Array<Maybe<ComponentDefaultNavigationSubcategoryLevel3>>>;
 };
 
 
 export type ComponentDefaultNavigationSubcategorySubcategoriesArgs = {
-  filters?: InputMaybe<ComponentDefaultNavigationSubcategoryLevel2FiltersInput>;
+  filters?: InputMaybe<ComponentDefaultNavigationSubcategoryLevel3FiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type ComponentDefaultNavigationSubcategoryFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ComponentDefaultNavigationSubcategoryFiltersInput>>>;
-  description?: InputMaybe<StringFilterInput>;
+  hasIcon?: InputMaybe<BooleanFilterInput>;
   href?: InputMaybe<StringFilterInput>;
-  iconSrc?: InputMaybe<StringFilterInput>;
   label?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<ComponentDefaultNavigationSubcategoryFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ComponentDefaultNavigationSubcategoryFiltersInput>>>;
-  productType?: InputMaybe<StringFilterInput>;
-  subcategories?: InputMaybe<ComponentDefaultNavigationSubcategoryLevel2FiltersInput>;
-};
-
-export type ComponentDefaultNavigationSubcategoryInput = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  href?: InputMaybe<Scalars['String']['input']>;
-  iconSrc?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  label?: InputMaybe<Scalars['String']['input']>;
-  productType?: InputMaybe<Scalars['String']['input']>;
-  subcategories?: InputMaybe<Array<InputMaybe<ComponentDefaultNavigationSubcategoryLevel2Input>>>;
-};
-
-export type ComponentDefaultNavigationSubcategoryLevel2 = {
-  __typename?: 'ComponentDefaultNavigationSubcategoryLevel2';
-  description?: Maybe<Scalars['String']['output']>;
-  href: Scalars['String']['output'];
-  iconSrc?: Maybe<Scalars['String']['output']>;
-  id: Scalars['ID']['output'];
-  label: Scalars['String']['output'];
-  productType?: Maybe<Scalars['String']['output']>;
-  subcategories?: Maybe<Array<Maybe<ComponentDefaultNavigationSubcategoryLevel3>>>;
-};
-
-
-export type ComponentDefaultNavigationSubcategoryLevel2SubcategoriesArgs = {
-  filters?: InputMaybe<ComponentDefaultNavigationSubcategoryLevel3FiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type ComponentDefaultNavigationSubcategoryLevel2FiltersInput = {
-  and?: InputMaybe<Array<InputMaybe<ComponentDefaultNavigationSubcategoryLevel2FiltersInput>>>;
-  description?: InputMaybe<StringFilterInput>;
-  href?: InputMaybe<StringFilterInput>;
-  iconSrc?: InputMaybe<StringFilterInput>;
-  label?: InputMaybe<StringFilterInput>;
-  not?: InputMaybe<ComponentDefaultNavigationSubcategoryLevel2FiltersInput>;
-  or?: InputMaybe<Array<InputMaybe<ComponentDefaultNavigationSubcategoryLevel2FiltersInput>>>;
-  productType?: InputMaybe<StringFilterInput>;
   subcategories?: InputMaybe<ComponentDefaultNavigationSubcategoryLevel3FiltersInput>;
 };
 
-export type ComponentDefaultNavigationSubcategoryLevel2Input = {
-  description?: InputMaybe<Scalars['String']['input']>;
+export type ComponentDefaultNavigationSubcategoryInput = {
+  hasIcon?: InputMaybe<Scalars['Boolean']['input']>;
   href?: InputMaybe<Scalars['String']['input']>;
-  iconSrc?: InputMaybe<Scalars['String']['input']>;
+  icon?: InputMaybe<Scalars['ID']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   label?: InputMaybe<Scalars['String']['input']>;
-  productType?: InputMaybe<Scalars['String']['input']>;
   subcategories?: InputMaybe<Array<InputMaybe<ComponentDefaultNavigationSubcategoryLevel3Input>>>;
 };
 
 export type ComponentDefaultNavigationSubcategoryLevel3 = {
   __typename?: 'ComponentDefaultNavigationSubcategoryLevel3';
-  description?: Maybe<Scalars['String']['output']>;
-  href: Scalars['String']['output'];
-  iconSrc?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   label?: Maybe<Scalars['String']['output']>;
-  productType?: Maybe<Scalars['String']['output']>;
+  productType: Enum_Componentdefaultnavigationsubcategorylevel3_Producttype;
 };
 
 export type ComponentDefaultNavigationSubcategoryLevel3FiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ComponentDefaultNavigationSubcategoryLevel3FiltersInput>>>;
-  description?: InputMaybe<StringFilterInput>;
-  href?: InputMaybe<StringFilterInput>;
-  iconSrc?: InputMaybe<StringFilterInput>;
   label?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<ComponentDefaultNavigationSubcategoryLevel3FiltersInput>;
   or?: InputMaybe<Array<InputMaybe<ComponentDefaultNavigationSubcategoryLevel3FiltersInput>>>;
@@ -315,12 +265,9 @@ export type ComponentDefaultNavigationSubcategoryLevel3FiltersInput = {
 };
 
 export type ComponentDefaultNavigationSubcategoryLevel3Input = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  href?: InputMaybe<Scalars['String']['input']>;
-  iconSrc?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   label?: InputMaybe<Scalars['String']['input']>;
-  productType?: InputMaybe<Scalars['String']['input']>;
+  productType?: InputMaybe<Enum_Componentdefaultnavigationsubcategorylevel3_Producttype>;
 };
 
 export type ComponentDefaultOffers = {
@@ -366,6 +313,57 @@ export type ComponentDefaultServiceInformationInput = {
   id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+export type ComponentFanShopBanner = {
+  __typename?: 'ComponentFanShopBanner';
+  Image: UploadFile;
+  buttonText?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+};
+
+export type ComponentFanShopBannerInput = {
+  Image?: InputMaybe<Scalars['ID']['input']>;
+  buttonText?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type ComponentFanShopProductItem = {
+  __typename?: 'ComponentFanShopProductItem';
+  averageRating: Scalars['Float']['output'];
+  discountPercent?: Maybe<Scalars['Int']['output']>;
+  discountedPrice?: Maybe<Scalars['Float']['output']>;
+  id: Scalars['ID']['output'];
+  isFavourite: Scalars['Boolean']['output'];
+  price: Scalars['Float']['output'];
+  productImage: UploadFile;
+  productName: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+};
+
+export type ComponentFanShopProductItemFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ComponentFanShopProductItemFiltersInput>>>;
+  averageRating?: InputMaybe<FloatFilterInput>;
+  discountPercent?: InputMaybe<IntFilterInput>;
+  discountedPrice?: InputMaybe<FloatFilterInput>;
+  isFavourite?: InputMaybe<BooleanFilterInput>;
+  not?: InputMaybe<ComponentFanShopProductItemFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ComponentFanShopProductItemFiltersInput>>>;
+  price?: InputMaybe<FloatFilterInput>;
+  productName?: InputMaybe<StringFilterInput>;
+  slug?: InputMaybe<StringFilterInput>;
+};
+
+export type ComponentFanShopProductItemInput = {
+  averageRating?: InputMaybe<Scalars['Float']['input']>;
+  discountPercent?: InputMaybe<Scalars['Int']['input']>;
+  discountedPrice?: InputMaybe<Scalars['Float']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  isFavourite?: InputMaybe<Scalars['Boolean']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
+  productImage?: InputMaybe<Scalars['ID']['input']>;
+  productName?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type DateTimeFilterInput = {
   and?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   between?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
@@ -396,6 +394,46 @@ export type DeleteMutationResponse = {
   documentId: Scalars['ID']['output'];
 };
 
+export enum Enum_Componentdefaultnavigationsubcategorylevel3_Producttype {
+  AcademyAndLeague = 'Academy_and_League',
+  Accessories = 'Accessories',
+  Bags = 'Bags',
+  Balls = 'Balls',
+  Boots = 'Boots',
+  Casual = 'Casual',
+  Club = 'Club',
+  Coats = 'Coats',
+  FanTShirts = 'Fan_T_shirts',
+  Gloves = 'Gloves',
+  GoalkeeperGloves = 'Goalkeeper_Gloves',
+  Guards = 'Guards',
+  Hats = 'Hats',
+  HoodiesAndSweatshirts = 'Hoodies_and_Sweatshirts',
+  Jackets = 'Jackets',
+  Jerseys = 'Jerseys',
+  League = 'League',
+  Other = 'Other',
+  Pants = 'Pants',
+  Pro = 'Pro',
+  Rackets = 'Rackets',
+  Sale = 'Sale',
+  SandalsAndSlides = 'Sandals_and_Slides',
+  Shirts = 'Shirts',
+  ShirtsAndTops = 'Shirts_and_Tops',
+  Shoes = 'Shoes',
+  Shorts = 'Shorts',
+  ShortsAndSkirts = 'Shorts_and_Skirts',
+  Socks = 'Socks',
+  SportsShoes = 'Sports_Shoes',
+  Sweatshirt = 'Sweatshirt',
+  TShirts = 'T_Shirts',
+  TechnicalUnderwear = 'Technical_Underwear',
+  Thermos = 'Thermos',
+  TopsAndTShirts = 'Tops_and_T_Shirts',
+  Turfs = 'Turfs',
+  Underwear = 'Underwear'
+}
+
 export enum Enum_Product_Availablecolors {
   Black = 'black',
   Blue = 'blue',
@@ -414,6 +452,82 @@ export enum Enum_Product_Availablesizes {
   Xxl = 'XXL',
   OneSize = 'one_size'
 }
+
+export type FanShop = {
+  __typename?: 'FanShop';
+  Banner: ComponentFanShopBanner;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  documentId: Scalars['ID']['output'];
+  locale?: Maybe<Scalars['String']['output']>;
+  localizations: Array<Maybe<FanShop>>;
+  localizations_connection?: Maybe<FanShopRelationResponseCollection>;
+  productList: Array<Maybe<ComponentFanShopProductItem>>;
+  productListTitle: Scalars['String']['output'];
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  seeMore: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type FanShopProductListArgs = {
+  filters?: InputMaybe<ComponentFanShopProductItemFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type FanShopInput = {
+  Banner?: InputMaybe<ComponentFanShopBannerInput>;
+  productList?: InputMaybe<Array<InputMaybe<ComponentFanShopProductItemInput>>>;
+  productListTitle?: InputMaybe<Scalars['String']['input']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  seeMore?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type FanShopRelationResponseCollection = {
+  __typename?: 'FanShopRelationResponseCollection';
+  nodes: Array<FanShop>;
+};
+
+export type FastView = {
+  __typename?: 'FastView';
+  Gallery: Array<Maybe<UploadFile>>;
+  Gallery_connection: UploadFileRelationResponseCollection;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  documentId: Scalars['ID']['output'];
+  locale?: Maybe<Scalars['String']['output']>;
+  localizations: Array<Maybe<FastView>>;
+  localizations_connection?: Maybe<FastViewRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  title: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type FastViewGalleryArgs = {
+  filters?: InputMaybe<UploadFileFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type FastViewGallery_ConnectionArgs = {
+  filters?: InputMaybe<UploadFileFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type FastViewInput = {
+  Gallery?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type FastViewRelationResponseCollection = {
+  __typename?: 'FastViewRelationResponseCollection';
+  nodes: Array<FastView>;
+};
 
 export type FileInfoInput = {
   alternativeText?: InputMaybe<Scalars['String']['input']>;
@@ -446,7 +560,7 @@ export type FloatFilterInput = {
   startsWith?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type GenericMorph = Category | ComponentDefaultFanshop | ComponentDefaultHomePageSliderBanners | ComponentDefaultNavigationItem | ComponentDefaultNavigationSubcategory | ComponentDefaultNavigationSubcategoryLevel2 | ComponentDefaultNavigationSubcategoryLevel3 | ComponentDefaultOffers | ComponentDefaultServiceInformation | Header | HomePage | I18NLocale | Product | Review | ReviewWorkflowsWorkflow | ReviewWorkflowsWorkflowStage | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
+export type GenericMorph = Category | ComponentDefaultFanshop | ComponentDefaultHomePageSliderBanners | ComponentDefaultNavigationItem | ComponentDefaultNavigationSubcategory | ComponentDefaultNavigationSubcategoryLevel3 | ComponentDefaultOffers | ComponentDefaultServiceInformation | ComponentFanShopBanner | ComponentFanShopProductItem | FanShop | FastView | Header | HomePage | I18NLocale | Product | Review | ReviewWorkflowsWorkflow | ReviewWorkflowsWorkflowStage | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
 
 export type Header = {
   __typename?: 'Header';
@@ -665,6 +779,8 @@ export type Mutation = {
   /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   deleteCategory?: Maybe<DeleteMutationResponse>;
+  deleteFanShop?: Maybe<DeleteMutationResponse>;
+  deleteFastView?: Maybe<DeleteMutationResponse>;
   deleteHeader?: Maybe<DeleteMutationResponse>;
   deleteHomePage?: Maybe<DeleteMutationResponse>;
   deleteProduct?: Maybe<DeleteMutationResponse>;
@@ -686,6 +802,8 @@ export type Mutation = {
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateCategory?: Maybe<Category>;
+  updateFanShop?: Maybe<FanShop>;
+  updateFastView?: Maybe<FastView>;
   updateHeader?: Maybe<Header>;
   updateHomePage?: Maybe<HomePage>;
   updateProduct?: Maybe<Product>;
@@ -752,6 +870,16 @@ export type MutationCreateUsersPermissionsUserArgs = {
 
 export type MutationDeleteCategoryArgs = {
   documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+};
+
+
+export type MutationDeleteFanShopArgs = {
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+};
+
+
+export type MutationDeleteFastViewArgs = {
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
 };
 
@@ -833,6 +961,20 @@ export type MutationResetPasswordArgs = {
 export type MutationUpdateCategoryArgs = {
   data: CategoryInput;
   documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type MutationUpdateFanShopArgs = {
+  data: FanShopInput;
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type MutationUpdateFastViewArgs = {
+  data: FastViewInput;
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
   status?: InputMaybe<PublicationStatus>;
 };
@@ -1046,6 +1188,8 @@ export type Query = {
   categories: Array<Maybe<Category>>;
   categories_connection?: Maybe<CategoryEntityResponseCollection>;
   category?: Maybe<Category>;
+  fanShop?: Maybe<FanShop>;
+  fastView?: Maybe<FastView>;
   header?: Maybe<Header>;
   homePage?: Maybe<HomePage>;
   i18NLocale?: Maybe<I18NLocale>;
@@ -1096,6 +1240,18 @@ export type QueryCategories_ConnectionArgs = {
 
 export type QueryCategoryArgs = {
   documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryFanShopArgs = {
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryFastViewArgs = {
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
   status?: InputMaybe<PublicationStatus>;
 };

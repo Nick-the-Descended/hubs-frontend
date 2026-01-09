@@ -37,7 +37,6 @@ export const load: LayoutServerLoad = async () => {
 							subcategories {
 								id
 								label
-								href
 								iconSrc
 								description
 								productType
@@ -87,7 +86,6 @@ function getFallbackHeader(): Partial<Header> {
                             "href": "#",
                             "iconSrc": "https://cms.znagti.ge/uploads/ID_0918_10_FOOTWEAR_3_D_Rendering_Side_Lateral_Left_View_transparent_87ce6d5779.png",
                             "description": null,
-                            "productType": null,
                             "subcategories": [
                                 {
                                     "id": "73",
@@ -95,7 +93,6 @@ function getFallbackHeader(): Partial<Header> {
                                     "href": "#",
                                     "iconSrc": null,
                                     "description": null,
-                                    "productType": null,
                                     "subcategories": [
                                         {
                                             "id": "1",
@@ -131,7 +128,6 @@ function getFallbackHeader(): Partial<Header> {
                             "href": "#",
                             "iconSrc": null,
                             "description": null,
-                            "productType": null,
                             "subcategories": [
                                 {
                                     "id": "13",
@@ -168,7 +164,6 @@ function getFallbackHeader(): Partial<Header> {
                             "href": "#",
                             "iconSrc": null,
                             "description": null,
-                            "productType": null,
                             "subcategories": [
                                 {
                                     "id": "16",
