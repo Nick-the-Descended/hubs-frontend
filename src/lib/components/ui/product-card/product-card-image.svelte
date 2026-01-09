@@ -1,6 +1,7 @@
 <script lang="ts">
     import {cn, type WithElementRef} from "@/utils";
     import type {HTMLAttributes} from "svelte/elements";
+    import {getContext} from 'svelte';
 
     type ProductCardImage = WithElementRef<
         HTMLAttributes<HTMLDivElement>
@@ -17,6 +18,8 @@
     }:
     ProductCardImage = $props();
 
+    const href = getContext<string | undefined>('product-card-href');
+
 </script>
 
 <!-- Image Container -->
@@ -27,9 +30,19 @@
     )}
         {...restProps}
 >
-    <img
-            src={imageUrl}
-            alt={imageAlt}
-            class="h-full w-full object-cover"
-    />
+    {#if href}
+        <a href={href} class="block h-full w-full cursor-pointer">
+            <img
+                    src={imageUrl}
+                    alt={imageAlt}
+                    class="h-full w-full object-cover"
+            />
+        </a>
+    {:else}
+        <img
+                src={imageUrl}
+                alt={imageAlt}
+                class="h-full w-full object-cover"
+        />
+    {/if}
 </div>

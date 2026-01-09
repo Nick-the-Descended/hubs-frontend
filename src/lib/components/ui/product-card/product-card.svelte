@@ -1,12 +1,17 @@
 <script lang="ts">
     import {cn} from '@/utils.js';
+    import {setContext} from 'svelte';
 
     let {
         ref = $bindable(null),
         class: className,
+        href,
         children,
         ...restProps
     } = $props();
+
+    // Provide href to child components via context
+    setContext('product-card-href', href);
 </script>
 
 <div

@@ -4,6 +4,7 @@
     import * as Breadcrumb from '@/components/ui/breadcrumb';
     import ProductCardSlider from '@/components/slider/ProductCardSlider.svelte';
     import type {ComponentDefaultNavigationItem} from '@/types/strapi-generated';
+    import {Button} from "@/components/ui/button";
 
     let {data}: { data: PageData } = $props();
 
@@ -43,19 +44,8 @@
         }
     });
 
-    // Transform fanShop products to ProductCardSlider format
-    const products = $derived(
-        fanShop?.productList?.map((product) => ({
-            id: product.id.toString(),
-            imageUrl: PUBLIC_STRAPI_URL + product.productImage.url,
-            imageAlt: product.productName,
-            name: product.productName,
-            rating: product.averageRating || 0,
-            price: product.discountedPrice || product.price,
-            currency: '₾',
-            isFavorite: product.isFavourite || false
-        })) || []
-    );
+    // Get products directly from fanShop (no transformation needed)
+    const products = $derived(fanShop?.productList || []);
 
     function handleNavItemEnter(index: number) {
         if (timeoutId) {
@@ -207,20 +197,34 @@
 
                     <!-- Banner Section -->
                     {#if fanShop.Banner}
-                        <div class="relative flex-1 basis-5 overflow-hidden rounded-lg grow">
-                            <img
-                                    src={PUBLIC_STRAPI_URL + fanShop.Banner.Image.url}
-                                    alt={fanShop.Banner.Image.name}
-                                    width={fanShop.Banner.Image.width}
-                                    height={fanShop.Banner.Image.height}
-                                    class="h-full w-full object-cover"
-                            />
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <button class="rounded-lg bg-white px-8 py-3 font-semibold text-gray-900 shadow-lg transition-transform hover:scale-105">
-                                    {fanShop.Banner.buttonText}
-                                </button>
+                        {#if fanShop.Banner.buttonText}
+                            <!-- Banner with button -->
+                            <div class="relative flex-1 basis-5 overflow-hidden rounded-lg grow">
+                                <img
+                                        src={PUBLIC_STRAPI_URL + fanShop.Banner.Image.url}
+                                        alt={fanShop.Banner.Image.name}
+                                        width={fanShop.Banner.Image.width}
+                                        height={fanShop.Banner.Image.height}
+                                        class="h-full w-full object-cover"
+                                />
+                                <div class="absolute inset-0 flex items-end justify-center pb-8">
+                                    <Button variant="banner" size="banner" href="/products/fan-shop/all">
+                                        {fanShop.Banner.buttonText}
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
+                        {:else}
+                            <!-- Clickable banner without button -->
+                            <a href="/products/fan-shop/all" class="relative flex-1 basis-5 overflow-hidden rounded-lg grow block cursor-pointer transition-opacity hover:opacity-90">
+                                <img
+                                        src={PUBLIC_STRAPI_URL + fanShop.Banner.Image.url}
+                                        alt={fanShop.Banner.Image.name}
+                                        width={fanShop.Banner.Image.width}
+                                        height={fanShop.Banner.Image.height}
+                                        class="h-full w-full object-cover"
+                                />
+                            </a>
+                        {/if}
                     {/if}
                 </div>
             </div>
@@ -245,6 +249,7 @@
                     </div>
                     <ProductCardSlider
                             products={products}
+                            baseUrl="/products/fan-shop"
                             onFavoriteClick={(productId) => console.log('Favorite:', productId)}
                             onQuickViewClick={(productId) => console.log('Quick view:', productId)}
                             onAddToCartClick={(productId) => console.log('Add to cart:', productId)}

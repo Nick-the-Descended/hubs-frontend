@@ -8,7 +8,9 @@
       "WebFetch(domain:www.figma.com)",
       "mcp__figma-desktop__get_design_context",
       "mcp__figma-desktop__get_screenshot",
-      "Bash(npx shadcn-svelte@latest add:*)"
+      "Bash(npx shadcn-svelte@latest add:*)",
+      "mcp__Figma_Desktop__get_design_context",
+      "mcp__Figma_Desktop__get_screenshot"
     ],
     "deny": [],
     "ask": []

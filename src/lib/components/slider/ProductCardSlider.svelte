@@ -2,25 +2,18 @@
     import emblaCarouselSvelte from 'embla-carousel-svelte';
     import type {EmblaCarouselType} from 'embla-carousel';
     import * as ProductCard from '@/components/ui/product-card';
-
-    type Product = {
-        id: string;
-        imageUrl: string;
-        imageAlt?: string;
-        name: string;
-        rating?: number;
-        price: string;
-        currency?: string;
-        isFavorite?: boolean;
-    };
+    import {cn} from "@/utils";
+    import type {ComponentFanShopProductItem} from '@/types/strapi-generated';
+    import {PUBLIC_STRAPI_URL} from '$env/static/public';
 
     type ProductCardSliderProps = {
-        products: Product[];
+        products: ComponentFanShopProductItem[];
         onFavoriteClick?: (productId: string) => void;
         onQuickViewClick?: (productId: string) => void;
         onAddToCartClick?: (productId: string) => void;
         slidesToShow?: number;
         tallCards?: boolean;
+        baseUrl?: string;
     };
 
     let {
@@ -29,8 +22,26 @@
         onQuickViewClick,
         onAddToCartClick,
         slidesToShow = 4,
-        tallCards = false
+        tallCards = false,
+        baseUrl = ''
     }: ProductCardSliderProps = $props();
+
+    // Helper function to get product URL from slug
+    // slug is used to construct the link: baseUrl/slug (e.g., "/products/fan-shop/1")
+    function getProductUrl(slug: string): string {
+        return `${baseUrl}/${slug}`;
+    }
+
+    // Helper function to get full image URL from Strapi UploadFile
+    // Strapi returns relative paths like "/uploads/img4_26e7b4db51.png"
+    // We need to prepend the Strapi backend URL (e.g., "https://cms.znagti.ge/uploads/img4_26e7b4db51.png")
+    function getImageUrl(productImage: ComponentFanShopProductItem['productImage']): string {
+        if (!productImage?.url) {
+            console.warn('Product image URL is undefined', productImage);
+            return '/placeholder-image.png'; // Fallback image
+        }
+        return `${PUBLIC_STRAPI_URL}${productImage.url}`;
+    }
 
     let emblaApi: EmblaCarouselType | undefined = $state();
     let canScrollPrev = $state(false);
@@ -95,14 +106,17 @@
         <div class="flex gap-4 mx-auto max-w-[85svw]">
             {#each products as product (product.id)}
                 <div
-                        class="h-[260px] w-[170px] flex-[0_0_170px] lg:h-[{tallCards ? 6 : 4}60px] lg:w-[400px] lg:flex-[0_0_400px]"
+                        class={cn(
+                            "min-h-[260px] w-[170px] flex-[0_0_170px] lg:w-[400px] lg:flex-[0_0_400px]",
+                            tallCards ? 'lg:h-[660px]' : 'lg:h-[460px]'
+                        )}
                 >
-                    <ProductCard.Root class="h-full w-full">
+                    <ProductCard.Root class="h-full w-full" href={getProductUrl(product.slug)}>
                         <!-- Image Container -->
                         <ProductCard.Image
                                 class="grow"
-                                imageUrl={product.imageUrl}
-                                imageAlt={product.imageAlt}
+                                imageUrl={getImageUrl(product.productImage)}
+                                imageAlt={product.productImage.alternativeText ?? product.productName}
                         />
 
                         <!-- Action Buttons Overlay -->
@@ -110,23 +124,23 @@
                                 onFavoriteClick={() => onFavoriteClick?.(product.id)}
                                 onQuickViewClick={() => onQuickViewClick?.(product.id)}
                                 onAddToCartClick={() => onAddToCartClick?.(product.id)}
-                                isFavorite={product.isFavorite}
+                                isFavorite={product.isFavourite}
                         />
 
                         <!-- Product Description -->
                         <ProductCard.Description>
                             <!-- Product Name -->
-                            <ProductCard.Title name={product.name}/>
+                            <ProductCard.Title name={product.productName}/>
 
                             <!-- Rating -->
-                            {#if product.rating && product.rating > 0}
-                                <ProductCard.Rating rating={product.rating}/>
+                            {#if product.averageRating && product.averageRating > 0}
+                                <ProductCard.Rating rating={product.averageRating}/>
                             {/if}
 
                             <!-- Price and Add to Cart -->
                             <ProductCard.Price
-                                    price={product.price}
-                                    currency={product.currency}
+                                    price={product.price.toString()}
+                                    currency="₾"
                             />
                         </ProductCard.Description>
                     </ProductCard.Root>
