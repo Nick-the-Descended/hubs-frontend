@@ -10,10 +10,6 @@
     const brands = $derived(data.brands);
     const brandItems = $derived(brandPage?.brand_items || []);
 
-    $inspect(brandPage);
-    $inspect(brands);
-    $inspect(brandItems);
-
     // Alphabet filter
     const alphabet = ['#', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     let selectedLetter = $state<string>('#');
