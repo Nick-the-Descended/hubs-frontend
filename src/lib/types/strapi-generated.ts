@@ -42,6 +42,107 @@ export type BooleanFilterInput = {
   startsWith?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type Brand = {
+  __typename?: 'Brand';
+  UID?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  documentId: Scalars['ID']['output'];
+  image?: Maybe<UploadFile>;
+  locale?: Maybe<Scalars['String']['output']>;
+  localizations: Array<Maybe<Brand>>;
+  localizations_connection?: Maybe<BrandRelationResponseCollection>;
+  name?: Maybe<Scalars['String']['output']>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type BrandLocalizationsArgs = {
+  filters?: InputMaybe<BrandFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type BrandLocalizations_ConnectionArgs = {
+  filters?: InputMaybe<BrandFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type BrandEntityResponseCollection = {
+  __typename?: 'BrandEntityResponseCollection';
+  nodes: Array<Brand>;
+  pageInfo: Pagination;
+};
+
+export type BrandFiltersInput = {
+  UID?: InputMaybe<StringFilterInput>;
+  and?: InputMaybe<Array<InputMaybe<BrandFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
+  locale?: InputMaybe<StringFilterInput>;
+  localizations?: InputMaybe<BrandFiltersInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<BrandFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<BrandFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type BrandInput = {
+  UID?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type BrandPage = {
+  __typename?: 'BrandPage';
+  brand_items: Array<Maybe<Brand>>;
+  brand_items_connection?: Maybe<BrandRelationResponseCollection>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  documentId: Scalars['ID']['output'];
+  locale?: Maybe<Scalars['String']['output']>;
+  localizations: Array<Maybe<BrandPage>>;
+  localizations_connection?: Maybe<BrandPageRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  viewMore?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type BrandPageBrand_ItemsArgs = {
+  filters?: InputMaybe<BrandFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type BrandPageBrand_Items_ConnectionArgs = {
+  filters?: InputMaybe<BrandFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type BrandPageInput = {
+  brand_items?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  viewMore?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type BrandPageRelationResponseCollection = {
+  __typename?: 'BrandPageRelationResponseCollection';
+  nodes: Array<BrandPage>;
+};
+
+export type BrandRelationResponseCollection = {
+  __typename?: 'BrandRelationResponseCollection';
+  nodes: Array<Brand>;
+};
+
 export type Category = {
   __typename?: 'Category';
   createdAt?: Maybe<Scalars['DateTime']['output']>;
@@ -116,29 +217,6 @@ export type CategoryInput = {
 export type CategoryRelationResponseCollection = {
   __typename?: 'CategoryRelationResponseCollection';
   nodes: Array<Category>;
-};
-
-export type ComponentBrandsBrands = {
-  __typename?: 'ComponentBrandsBrands';
-  brandImage: Array<Maybe<UploadFile>>;
-  brandImage_connection?: Maybe<UploadFileRelationResponseCollection>;
-  id: Scalars['ID']['output'];
-  seeMore?: Maybe<Scalars['String']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type ComponentBrandsBrandsBrandImageArgs = {
-  filters?: InputMaybe<UploadFileFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type ComponentBrandsBrandsBrandImage_ConnectionArgs = {
-  filters?: InputMaybe<UploadFileFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type ComponentDefaultFanshop = {
@@ -387,6 +465,27 @@ export type ComponentFanShopProductItemInput = {
   slug?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ComponentProductsListProducts = {
+  __typename?: 'ComponentProductsListProducts';
+  id: Scalars['ID']['output'];
+  isFavourite?: Maybe<Scalars['Boolean']['output']>;
+  product?: Maybe<Product>;
+};
+
+export type ComponentProductsListProductsFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ComponentProductsListProductsFiltersInput>>>;
+  isFavourite?: InputMaybe<BooleanFilterInput>;
+  not?: InputMaybe<ComponentProductsListProductsFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ComponentProductsListProductsFiltersInput>>>;
+  product?: InputMaybe<ProductFiltersInput>;
+};
+
+export type ComponentProductsListProductsInput = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  isFavourite?: InputMaybe<Scalars['Boolean']['input']>;
+  product?: InputMaybe<Scalars['ID']['input']>;
+};
+
 export type DateTimeFilterInput = {
   and?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   between?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
@@ -515,36 +614,25 @@ export type FanShopRelationResponseCollection = {
 
 export type FastView = {
   __typename?: 'FastView';
-  Gallery: Array<Maybe<UploadFile>>;
-  Gallery_connection: UploadFileRelationResponseCollection;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   documentId: Scalars['ID']['output'];
   locale?: Maybe<Scalars['String']['output']>;
   localizations: Array<Maybe<FastView>>;
   localizations_connection?: Maybe<FastViewRelationResponseCollection>;
+  product?: Maybe<Product>;
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  seeMore?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
-};
-
-
-export type FastViewGalleryArgs = {
-  filters?: InputMaybe<UploadFileFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type FastViewGallery_ConnectionArgs = {
-  filters?: InputMaybe<UploadFileFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  writeReview?: Maybe<Scalars['String']['output']>;
 };
 
 export type FastViewInput = {
-  Gallery?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  product?: InputMaybe<Scalars['ID']['input']>;
   publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  seeMore?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+  writeReview?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FastViewRelationResponseCollection = {
@@ -583,7 +671,7 @@ export type FloatFilterInput = {
   startsWith?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type GenericMorph = Category | ComponentBrandsBrands | ComponentDefaultFanshop | ComponentDefaultHomePageSliderBanners | ComponentDefaultNavigationItem | ComponentDefaultNavigationSubcategory | ComponentDefaultNavigationSubcategoryLevel3 | ComponentDefaultOffers | ComponentDefaultServiceInformation | ComponentFanShopBanner | ComponentFanShopProductItem | FanShop | FastView | Header | HomePage | I18NLocale | Product | Review | ReviewWorkflowsWorkflow | ReviewWorkflowsWorkflowStage | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
+export type GenericMorph = Brand | BrandPage | Category | ComponentDefaultFanshop | ComponentDefaultHomePageSliderBanners | ComponentDefaultNavigationItem | ComponentDefaultNavigationSubcategory | ComponentDefaultNavigationSubcategoryLevel3 | ComponentDefaultOffers | ComponentDefaultServiceInformation | ComponentFanShopBanner | ComponentFanShopProductItem | ComponentProductsListProducts | FanShop | FastView | Header | HomePage | I18NLocale | Product | ProductsList | Review | ReviewWorkflowsWorkflow | ReviewWorkflowsWorkflowStage | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
 
 export type Header = {
   __typename?: 'Header';
@@ -792,6 +880,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Change user password. Confirm with the current password. */
   changePassword?: Maybe<UsersPermissionsLoginPayload>;
+  createBrand?: Maybe<Brand>;
   createCategory?: Maybe<Category>;
   createProduct?: Maybe<Product>;
   createReview?: Maybe<Review>;
@@ -801,12 +890,15 @@ export type Mutation = {
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
   /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
+  deleteBrand?: Maybe<DeleteMutationResponse>;
+  deleteBrandPage?: Maybe<DeleteMutationResponse>;
   deleteCategory?: Maybe<DeleteMutationResponse>;
   deleteFanShop?: Maybe<DeleteMutationResponse>;
   deleteFastView?: Maybe<DeleteMutationResponse>;
   deleteHeader?: Maybe<DeleteMutationResponse>;
   deleteHomePage?: Maybe<DeleteMutationResponse>;
   deleteProduct?: Maybe<DeleteMutationResponse>;
+  deleteProductsList?: Maybe<DeleteMutationResponse>;
   deleteReview?: Maybe<DeleteMutationResponse>;
   deleteReviewWorkflowsWorkflow?: Maybe<DeleteMutationResponse>;
   deleteReviewWorkflowsWorkflowStage?: Maybe<DeleteMutationResponse>;
@@ -824,12 +916,15 @@ export type Mutation = {
   register: UsersPermissionsLoginPayload;
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
+  updateBrand?: Maybe<Brand>;
+  updateBrandPage?: Maybe<BrandPage>;
   updateCategory?: Maybe<Category>;
   updateFanShop?: Maybe<FanShop>;
   updateFastView?: Maybe<FastView>;
   updateHeader?: Maybe<Header>;
   updateHomePage?: Maybe<HomePage>;
   updateProduct?: Maybe<Product>;
+  updateProductsList?: Maybe<ProductsList>;
   updateReview?: Maybe<Review>;
   updateReviewWorkflowsWorkflow?: Maybe<ReviewWorkflowsWorkflow>;
   updateReviewWorkflowsWorkflowStage?: Maybe<ReviewWorkflowsWorkflowStage>;
@@ -845,6 +940,13 @@ export type MutationChangePasswordArgs = {
   currentPassword: Scalars['String']['input'];
   password: Scalars['String']['input'];
   passwordConfirmation: Scalars['String']['input'];
+};
+
+
+export type MutationCreateBrandArgs = {
+  data: BrandInput;
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 
@@ -891,6 +993,17 @@ export type MutationCreateUsersPermissionsUserArgs = {
 };
 
 
+export type MutationDeleteBrandArgs = {
+  documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+};
+
+
+export type MutationDeleteBrandPageArgs = {
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+};
+
+
 export type MutationDeleteCategoryArgs = {
   documentId: Scalars['ID']['input'];
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
@@ -919,6 +1032,11 @@ export type MutationDeleteHomePageArgs = {
 
 export type MutationDeleteProductArgs = {
   documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+};
+
+
+export type MutationDeleteProductsListArgs = {
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
 };
 
@@ -981,6 +1099,21 @@ export type MutationResetPasswordArgs = {
 };
 
 
+export type MutationUpdateBrandArgs = {
+  data: BrandInput;
+  documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type MutationUpdateBrandPageArgs = {
+  data: BrandPageInput;
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
 export type MutationUpdateCategoryArgs = {
   data: CategoryInput;
   documentId: Scalars['ID']['input'];
@@ -1020,6 +1153,13 @@ export type MutationUpdateHomePageArgs = {
 export type MutationUpdateProductArgs = {
   data: ProductInput;
   documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type MutationUpdateProductsListArgs = {
+  data: ProductsListInput;
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
   status?: InputMaybe<PublicationStatus>;
 };
@@ -1201,6 +1341,35 @@ export type ProductRelationResponseCollection = {
   nodes: Array<Product>;
 };
 
+export type ProductsList = {
+  __typename?: 'ProductsList';
+  Prodcuts?: Maybe<Array<Maybe<ComponentProductsListProducts>>>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  documentId: Scalars['ID']['output'];
+  locale?: Maybe<Scalars['String']['output']>;
+  localizations: Array<Maybe<ProductsList>>;
+  localizations_connection?: Maybe<ProductsListRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type ProductsListProdcutsArgs = {
+  filters?: InputMaybe<ComponentProductsListProductsFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type ProductsListInput = {
+  Prodcuts?: InputMaybe<Array<InputMaybe<ComponentProductsListProductsInput>>>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type ProductsListRelationResponseCollection = {
+  __typename?: 'ProductsListRelationResponseCollection';
+  nodes: Array<ProductsList>;
+};
+
 export enum PublicationStatus {
   Draft = 'DRAFT',
   Published = 'PUBLISHED'
@@ -1208,6 +1377,10 @@ export enum PublicationStatus {
 
 export type Query = {
   __typename?: 'Query';
+  brand?: Maybe<Brand>;
+  brandPage?: Maybe<BrandPage>;
+  brands: Array<Maybe<Brand>>;
+  brands_connection?: Maybe<BrandEntityResponseCollection>;
   categories: Array<Maybe<Category>>;
   categories_connection?: Maybe<CategoryEntityResponseCollection>;
   category?: Maybe<Category>;
@@ -1221,6 +1394,7 @@ export type Query = {
   me?: Maybe<UsersPermissionsMe>;
   product?: Maybe<Product>;
   products: Array<Maybe<Product>>;
+  productsList?: Maybe<ProductsList>;
   products_connection?: Maybe<ProductEntityResponseCollection>;
   review?: Maybe<Review>;
   reviewWorkflowsWorkflow?: Maybe<ReviewWorkflowsWorkflow>;
@@ -1240,6 +1414,37 @@ export type Query = {
   usersPermissionsUser?: Maybe<UsersPermissionsUser>;
   usersPermissionsUsers: Array<Maybe<UsersPermissionsUser>>;
   usersPermissionsUsers_connection?: Maybe<UsersPermissionsUserEntityResponseCollection>;
+};
+
+
+export type QueryBrandArgs = {
+  documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryBrandPageArgs = {
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryBrandsArgs = {
+  filters?: InputMaybe<BrandFiltersInput>;
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryBrands_ConnectionArgs = {
+  filters?: InputMaybe<BrandFiltersInput>;
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  status?: InputMaybe<PublicationStatus>;
 };
 
 
@@ -1326,6 +1531,12 @@ export type QueryProductsArgs = {
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryProductsListArgs = {
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
   status?: InputMaybe<PublicationStatus>;
 };
 
