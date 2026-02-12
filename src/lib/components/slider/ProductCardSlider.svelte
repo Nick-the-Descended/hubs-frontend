@@ -26,15 +26,12 @@
         baseUrl = ''
     }: ProductCardSliderProps = $props();
 
-    // Helper function to get product URL from slug
     // slug is used to construct the link: baseUrl/slug (e.g., "/products/fan-shop/1")
     function getProductUrl(slug: string): string {
         return `${baseUrl}/${slug}`;
     }
 
-    // Helper function to get full image URL from Strapi UploadFile
     // Strapi returns relative paths like "/uploads/img4_26e7b4db51.png"
-    // We need to prepend the Strapi backend URL (e.g., "https://cms.znagti.ge/uploads/img4_26e7b4db51.png")
     function getImageUrl(productImage: ComponentFanShopProductItem['productImage']): string {
         if (!productImage?.url) {
             console.warn('Product image URL is undefined', productImage);
@@ -116,7 +113,7 @@
                         <ProductCard.Image
                                 class="grow"
                                 imageUrl={getImageUrl(product.productImage)}
-                                imageAlt={product.productImage.alternativeText ?? product.productName}
+                                imageAlt={product.productImage?.alternativeText ?? product.productName}
                         />
 
                         <!-- Action Buttons Overlay -->
