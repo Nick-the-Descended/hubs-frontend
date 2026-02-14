@@ -48,26 +48,9 @@ export type Brand = {
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   documentId: Scalars['ID']['output'];
   image?: Maybe<UploadFile>;
-  locale?: Maybe<Scalars['String']['output']>;
-  localizations: Array<Maybe<Brand>>;
-  localizations_connection?: Maybe<BrandRelationResponseCollection>;
   name?: Maybe<Scalars['String']['output']>;
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
-};
-
-
-export type BrandLocalizationsArgs = {
-  filters?: InputMaybe<BrandFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type BrandLocalizations_ConnectionArgs = {
-  filters?: InputMaybe<BrandFiltersInput>;
-  pagination?: InputMaybe<PaginationArg>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type BrandEntityResponseCollection = {
@@ -81,8 +64,6 @@ export type BrandFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<BrandFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   documentId?: InputMaybe<IdFilterInput>;
-  locale?: InputMaybe<StringFilterInput>;
-  localizations?: InputMaybe<BrandFiltersInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<BrandFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<BrandFiltersInput>>>;
@@ -99,6 +80,7 @@ export type BrandInput = {
 
 export type BrandPage = {
   __typename?: 'BrandPage';
+  allBrands?: Maybe<Scalars['String']['output']>;
   brand_items: Array<Maybe<Brand>>;
   brand_items_connection?: Maybe<BrandRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
@@ -127,6 +109,7 @@ export type BrandPageBrand_Items_ConnectionArgs = {
 };
 
 export type BrandPageInput = {
+  allBrands?: InputMaybe<Scalars['String']['input']>;
   brand_items?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -556,25 +539,6 @@ export enum Enum_Componentdefaultnavigationsubcategorylevel3_Producttype {
   Underwear = 'Underwear'
 }
 
-export enum Enum_Product_Availablecolors {
-  Black = 'black',
-  Blue = 'blue',
-  Green = 'green',
-  Other = 'other',
-  Red = 'red',
-  White = 'white'
-}
-
-export enum Enum_Product_Availablesizes {
-  L = 'L',
-  M = 'M',
-  S = 'S',
-  Xl = 'XL',
-  Xs = 'XS',
-  Xxl = 'XXL',
-  OneSize = 'one_size'
-}
-
 export type FanShop = {
   __typename?: 'FanShop';
   Banner: ComponentFanShopBanner;
@@ -671,7 +635,7 @@ export type FloatFilterInput = {
   startsWith?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type GenericMorph = Brand | BrandPage | Category | ComponentDefaultFanshop | ComponentDefaultHomePageSliderBanners | ComponentDefaultNavigationItem | ComponentDefaultNavigationSubcategory | ComponentDefaultNavigationSubcategoryLevel3 | ComponentDefaultOffers | ComponentDefaultServiceInformation | ComponentFanShopBanner | ComponentFanShopProductItem | ComponentProductsListProducts | FanShop | FastView | Header | HomePage | I18NLocale | Product | ProductsList | Review | ReviewWorkflowsWorkflow | ReviewWorkflowsWorkflowStage | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
+export type GenericMorph = Brand | BrandPage | Category | ComponentDefaultFanshop | ComponentDefaultHomePageSliderBanners | ComponentDefaultNavigationItem | ComponentDefaultNavigationSubcategory | ComponentDefaultNavigationSubcategoryLevel3 | ComponentDefaultOffers | ComponentDefaultServiceInformation | ComponentFanShopBanner | ComponentFanShopProductItem | ComponentProductsListProducts | FanShop | FastView | Header | HomePage | I18NLocale | Product | ProductColorVariant | ProductSizeVariant | ProductsList | Review | ReviewWorkflowsWorkflow | ReviewWorkflowsWorkflowStage | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
 
 export type Header = {
   __typename?: 'Header';
@@ -883,6 +847,8 @@ export type Mutation = {
   createBrand?: Maybe<Brand>;
   createCategory?: Maybe<Category>;
   createProduct?: Maybe<Product>;
+  createProductColorVariant?: Maybe<ProductColorVariant>;
+  createProductSizeVariant?: Maybe<ProductSizeVariant>;
   createReview?: Maybe<Review>;
   createReviewWorkflowsWorkflow?: Maybe<ReviewWorkflowsWorkflow>;
   createReviewWorkflowsWorkflowStage?: Maybe<ReviewWorkflowsWorkflowStage>;
@@ -898,6 +864,8 @@ export type Mutation = {
   deleteHeader?: Maybe<DeleteMutationResponse>;
   deleteHomePage?: Maybe<DeleteMutationResponse>;
   deleteProduct?: Maybe<DeleteMutationResponse>;
+  deleteProductColorVariant?: Maybe<DeleteMutationResponse>;
+  deleteProductSizeVariant?: Maybe<DeleteMutationResponse>;
   deleteProductsList?: Maybe<DeleteMutationResponse>;
   deleteReview?: Maybe<DeleteMutationResponse>;
   deleteReviewWorkflowsWorkflow?: Maybe<DeleteMutationResponse>;
@@ -924,6 +892,8 @@ export type Mutation = {
   updateHeader?: Maybe<Header>;
   updateHomePage?: Maybe<HomePage>;
   updateProduct?: Maybe<Product>;
+  updateProductColorVariant?: Maybe<ProductColorVariant>;
+  updateProductSizeVariant?: Maybe<ProductSizeVariant>;
   updateProductsList?: Maybe<ProductsList>;
   updateReview?: Maybe<Review>;
   updateReviewWorkflowsWorkflow?: Maybe<ReviewWorkflowsWorkflow>;
@@ -945,7 +915,6 @@ export type MutationChangePasswordArgs = {
 
 export type MutationCreateBrandArgs = {
   data: BrandInput;
-  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
   status?: InputMaybe<PublicationStatus>;
 };
 
@@ -960,6 +929,19 @@ export type MutationCreateCategoryArgs = {
 export type MutationCreateProductArgs = {
   data: ProductInput;
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type MutationCreateProductColorVariantArgs = {
+  data: ProductColorVariantInput;
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type MutationCreateProductSizeVariantArgs = {
+  data: ProductSizeVariantInput;
   status?: InputMaybe<PublicationStatus>;
 };
 
@@ -995,7 +977,6 @@ export type MutationCreateUsersPermissionsUserArgs = {
 
 export type MutationDeleteBrandArgs = {
   documentId: Scalars['ID']['input'];
-  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
 };
 
 
@@ -1033,6 +1014,17 @@ export type MutationDeleteHomePageArgs = {
 export type MutationDeleteProductArgs = {
   documentId: Scalars['ID']['input'];
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+};
+
+
+export type MutationDeleteProductColorVariantArgs = {
+  documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+};
+
+
+export type MutationDeleteProductSizeVariantArgs = {
+  documentId: Scalars['ID']['input'];
 };
 
 
@@ -1102,7 +1094,6 @@ export type MutationResetPasswordArgs = {
 export type MutationUpdateBrandArgs = {
   data: BrandInput;
   documentId: Scalars['ID']['input'];
-  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
   status?: InputMaybe<PublicationStatus>;
 };
 
@@ -1154,6 +1145,21 @@ export type MutationUpdateProductArgs = {
   data: ProductInput;
   documentId: Scalars['ID']['input'];
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type MutationUpdateProductColorVariantArgs = {
+  data: ProductColorVariantInput;
+  documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type MutationUpdateProductSizeVariantArgs = {
+  data: ProductSizeVariantInput;
+  documentId: Scalars['ID']['input'];
   status?: InputMaybe<PublicationStatus>;
 };
 
@@ -1221,12 +1227,15 @@ export type PaginationArg = {
 
 export type Product = {
   __typename?: 'Product';
-  availableColors?: Maybe<Enum_Product_Availablecolors>;
-  availableSizes?: Maybe<Enum_Product_Availablesizes>;
+  availableSizes: Array<Maybe<ProductSizeVariant>>;
+  availableSizes_connection?: Maybe<ProductSizeVariantRelationResponseCollection>;
+  avaliableColors: Array<Maybe<ProductColorVariant>>;
+  avaliableColors_connection?: Maybe<ProductColorVariantRelationResponseCollection>;
   averageRating?: Maybe<Scalars['Float']['output']>;
   category?: Maybe<Category>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   detailedDescription?: Maybe<Scalars['JSON']['output']>;
+  discountPercentage?: Maybe<Scalars['Int']['output']>;
   discountPrice?: Maybe<Scalars['Float']['output']>;
   documentId: Scalars['ID']['output'];
   gallery: Array<Maybe<UploadFile>>;
@@ -1244,6 +1253,35 @@ export type Product = {
   shortDescription?: Maybe<Scalars['String']['output']>;
   slug: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  writeReview?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type ProductAvailableSizesArgs = {
+  filters?: InputMaybe<ProductSizeVariantFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ProductAvailableSizes_ConnectionArgs = {
+  filters?: InputMaybe<ProductSizeVariantFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ProductAvaliableColorsArgs = {
+  filters?: InputMaybe<ProductColorVariantFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ProductAvaliableColors_ConnectionArgs = {
+  filters?: InputMaybe<ProductColorVariantFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -1288,6 +1326,64 @@ export type ProductReviews_ConnectionArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
+export type ProductColorVariant = {
+  __typename?: 'ProductColorVariant';
+  colorName?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  documentId: Scalars['ID']['output'];
+  hexCode?: Maybe<Scalars['String']['output']>;
+  locale?: Maybe<Scalars['String']['output']>;
+  localizations: Array<Maybe<ProductColorVariant>>;
+  localizations_connection?: Maybe<ProductColorVariantRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type ProductColorVariantLocalizationsArgs = {
+  filters?: InputMaybe<ProductColorVariantFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ProductColorVariantLocalizations_ConnectionArgs = {
+  filters?: InputMaybe<ProductColorVariantFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type ProductColorVariantEntityResponseCollection = {
+  __typename?: 'ProductColorVariantEntityResponseCollection';
+  nodes: Array<ProductColorVariant>;
+  pageInfo: Pagination;
+};
+
+export type ProductColorVariantFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ProductColorVariantFiltersInput>>>;
+  colorName?: InputMaybe<StringFilterInput>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
+  hexCode?: InputMaybe<StringFilterInput>;
+  locale?: InputMaybe<StringFilterInput>;
+  localizations?: InputMaybe<ProductColorVariantFiltersInput>;
+  not?: InputMaybe<ProductColorVariantFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ProductColorVariantFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ProductColorVariantInput = {
+  colorName?: InputMaybe<Scalars['String']['input']>;
+  hexCode?: InputMaybe<Scalars['String']['input']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type ProductColorVariantRelationResponseCollection = {
+  __typename?: 'ProductColorVariantRelationResponseCollection';
+  nodes: Array<ProductColorVariant>;
+};
+
 export type ProductEntityResponseCollection = {
   __typename?: 'ProductEntityResponseCollection';
   nodes: Array<Product>;
@@ -1296,12 +1392,13 @@ export type ProductEntityResponseCollection = {
 
 export type ProductFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<ProductFiltersInput>>>;
-  availableColors?: InputMaybe<StringFilterInput>;
-  availableSizes?: InputMaybe<StringFilterInput>;
+  availableSizes?: InputMaybe<ProductSizeVariantFiltersInput>;
+  avaliableColors?: InputMaybe<ProductColorVariantFiltersInput>;
   averageRating?: InputMaybe<FloatFilterInput>;
   category?: InputMaybe<CategoryFiltersInput>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   detailedDescription?: InputMaybe<JsonFilterInput>;
+  discountPercentage?: InputMaybe<IntFilterInput>;
   discountPrice?: InputMaybe<FloatFilterInput>;
   documentId?: InputMaybe<IdFilterInput>;
   hasBranding?: InputMaybe<BooleanFilterInput>;
@@ -1316,14 +1413,16 @@ export type ProductFiltersInput = {
   shortDescription?: InputMaybe<StringFilterInput>;
   slug?: InputMaybe<StringFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
+  writeReview?: InputMaybe<StringFilterInput>;
 };
 
 export type ProductInput = {
-  availableColors?: InputMaybe<Enum_Product_Availablecolors>;
-  availableSizes?: InputMaybe<Enum_Product_Availablesizes>;
+  availableSizes?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  avaliableColors?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   averageRating?: InputMaybe<Scalars['Float']['input']>;
   category?: InputMaybe<Scalars['ID']['input']>;
   detailedDescription?: InputMaybe<Scalars['JSON']['input']>;
+  discountPercentage?: InputMaybe<Scalars['Int']['input']>;
   discountPrice?: InputMaybe<Scalars['Float']['input']>;
   gallery?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   hasBranding?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1334,11 +1433,48 @@ export type ProductInput = {
   reviews?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   shortDescription?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
+  writeReview?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ProductRelationResponseCollection = {
   __typename?: 'ProductRelationResponseCollection';
   nodes: Array<Product>;
+};
+
+export type ProductSizeVariant = {
+  __typename?: 'ProductSizeVariant';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  documentId: Scalars['ID']['output'];
+  productSize?: Maybe<Scalars['String']['output']>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type ProductSizeVariantEntityResponseCollection = {
+  __typename?: 'ProductSizeVariantEntityResponseCollection';
+  nodes: Array<ProductSizeVariant>;
+  pageInfo: Pagination;
+};
+
+export type ProductSizeVariantFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ProductSizeVariantFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  documentId?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<ProductSizeVariantFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ProductSizeVariantFiltersInput>>>;
+  productSize?: InputMaybe<StringFilterInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ProductSizeVariantInput = {
+  productSize?: InputMaybe<Scalars['String']['input']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type ProductSizeVariantRelationResponseCollection = {
+  __typename?: 'ProductSizeVariantRelationResponseCollection';
+  nodes: Array<ProductSizeVariant>;
 };
 
 export type ProductsList = {
@@ -1393,6 +1529,12 @@ export type Query = {
   i18NLocales_connection?: Maybe<I18NLocaleEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
   product?: Maybe<Product>;
+  productColorVariant?: Maybe<ProductColorVariant>;
+  productColorVariants: Array<Maybe<ProductColorVariant>>;
+  productColorVariants_connection?: Maybe<ProductColorVariantEntityResponseCollection>;
+  productSizeVariant?: Maybe<ProductSizeVariant>;
+  productSizeVariants: Array<Maybe<ProductSizeVariant>>;
+  productSizeVariants_connection?: Maybe<ProductSizeVariantEntityResponseCollection>;
   products: Array<Maybe<Product>>;
   productsList?: Maybe<ProductsList>;
   products_connection?: Maybe<ProductEntityResponseCollection>;
@@ -1419,7 +1561,6 @@ export type Query = {
 
 export type QueryBrandArgs = {
   documentId: Scalars['ID']['input'];
-  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
   status?: InputMaybe<PublicationStatus>;
 };
 
@@ -1432,7 +1573,6 @@ export type QueryBrandPageArgs = {
 
 export type QueryBrandsArgs = {
   filters?: InputMaybe<BrandFiltersInput>;
-  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   status?: InputMaybe<PublicationStatus>;
@@ -1441,7 +1581,6 @@ export type QueryBrandsArgs = {
 
 export type QueryBrands_ConnectionArgs = {
   filters?: InputMaybe<BrandFiltersInput>;
-  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   status?: InputMaybe<PublicationStatus>;
@@ -1522,6 +1661,53 @@ export type QueryI18NLocales_ConnectionArgs = {
 export type QueryProductArgs = {
   documentId: Scalars['ID']['input'];
   locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryProductColorVariantArgs = {
+  documentId: Scalars['ID']['input'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryProductColorVariantsArgs = {
+  filters?: InputMaybe<ProductColorVariantFiltersInput>;
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryProductColorVariants_ConnectionArgs = {
+  filters?: InputMaybe<ProductColorVariantFiltersInput>;
+  locale?: InputMaybe<Scalars['I18NLocaleCode']['input']>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryProductSizeVariantArgs = {
+  documentId: Scalars['ID']['input'];
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryProductSizeVariantsArgs = {
+  filters?: InputMaybe<ProductSizeVariantFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  status?: InputMaybe<PublicationStatus>;
+};
+
+
+export type QueryProductSizeVariants_ConnectionArgs = {
+  filters?: InputMaybe<ProductSizeVariantFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   status?: InputMaybe<PublicationStatus>;
 };
 

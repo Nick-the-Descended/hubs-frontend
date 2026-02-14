@@ -10,5 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="hubs-cms" />
+    <orderEntry type="module" module-name="hubs-store" />
   </component>
 </module>
