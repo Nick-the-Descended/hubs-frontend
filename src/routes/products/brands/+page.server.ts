@@ -20,7 +20,7 @@ query BrandPage($locale: I18NLocaleCode, $sort: [String]) {
       }
     }
   }
-  brands(locale: $locale) {
+  brands {
     UID
     name
   }

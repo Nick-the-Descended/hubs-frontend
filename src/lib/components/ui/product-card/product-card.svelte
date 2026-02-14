@@ -17,7 +17,7 @@
 <div
         bind:this={ref}
         class={cn(
-        'group relative flex w-full flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition-shadow hover:shadow-md',
+        'group relative flex w-full flex-col overflow-hidden rounded-md border bg-card shadow-sm transition-shadow hover:shadow-md',
         className
     )}
         {...restProps}

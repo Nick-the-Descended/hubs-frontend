@@ -8,11 +8,13 @@
     > & {
         imageUrl: string;
         imageAlt: string;
+        tall?: boolean;
         class?: string;
     };
     let {
         imageUrl,
         imageAlt,
+        tall = false,
         class: className,
         ...restProps
     }:
@@ -25,7 +27,8 @@
 <!-- Image Container -->
 <div
         class={cn(
-        'relative h-[190px] w-full overflow-hidden bg-muted lg:h-[360px]',
+        'relative w-full overflow-hidden bg-muted',
+        tall ? 'h-[190px] lg:h-[360px]' : 'h-[130px] lg:h-[240px]',
         className
     )}
         {...restProps}
@@ -35,14 +38,14 @@
             <img
                     src={imageUrl}
                     alt={imageAlt}
-                    class="h-full w-full object-cover"
+                    class="h-full w-full object-contain"
             />
         </a>
     {:else}
         <img
                 src={imageUrl}
                 alt={imageAlt}
-                class="h-full w-full object-cover"
+                class="h-full w-full object-contain"
         />
     {/if}
 </div>

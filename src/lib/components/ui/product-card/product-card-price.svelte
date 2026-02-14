@@ -6,7 +6,8 @@
         HTMLAttributes<HTMLDivElement>
     > & {
         currency?: string;
-        price: string;
+        price: number;
+        discountedPrice: number | null;
     };
 
     let {
@@ -14,6 +15,7 @@
         currency = 'GEL',
         class: className,
         price,
+        discountedPrice,
         ...restProps
     }: ProductCardPrice = $props();
 </script>
@@ -33,4 +35,7 @@
         >{currency}</span
         >
     </div>
+    {#if discountedPrice != null && discountedPrice < price}
+        <span class="text-sm text-gray-400 line-through">{discountedPrice}₾</span>
+    {/if}
 </div>

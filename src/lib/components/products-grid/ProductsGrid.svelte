@@ -141,8 +141,8 @@
                 <ul class="space-y-2">
                     <li>
                         <a
-                            href="/products/all"
-                            class="text-sm transition-colors hover:text-primary {activeCategory === null ? 'font-semibold text-primary' : 'text-foreground'}"
+                                href="/products/all"
+                                class="text-sm transition-colors hover:text-primary {activeCategory === null ? 'font-semibold text-primary' : 'text-foreground'}"
                         >
                             All Products
                         </a>
@@ -150,8 +150,8 @@
                     {#each categories as category (category.slug)}
                         <li>
                             <a
-                                href="/products/{category.slug}"
-                                class="text-sm transition-colors hover:text-primary {activeCategory === category.slug ? 'font-semibold text-primary' : 'text-foreground'}"
+                                    href="/products/{category.slug}"
+                                    class="text-sm transition-colors hover:text-primary {activeCategory === category.slug ? 'font-semibold text-primary' : 'text-foreground'}"
                             >
                                 {category.name}
                             </a>
@@ -166,9 +166,9 @@
                 <div class="flex flex-wrap gap-2">
                     {#each colorOptions as color (color.name)}
                         <button
-                            class="h-7 w-7 rounded-full border-2 border-gray-200 transition-all hover:scale-110 hover:border-gray-400"
-                            style="background-color: {color.hex}"
-                            title={color.name}
+                                class="h-7 w-7 rounded-full border-2 border-gray-200 transition-all hover:scale-110 hover:border-gray-400"
+                                style="background-color: {color.hex}"
+                                title={color.name}
                         ></button>
                     {/each}
                 </div>
@@ -180,7 +180,7 @@
                 <div class="flex flex-wrap gap-2">
                     {#each sizeOptions as size (size)}
                         <button
-                            class="rounded-md border border-gray-200 px-3 py-1.5 text-sm transition-colors hover:border-gray-400 hover:bg-gray-50"
+                                class="rounded-md border border-gray-200 px-3 py-1.5 text-sm transition-colors hover:border-gray-400 hover:bg-gray-50"
                         >
                             {size}
                         </button>
@@ -193,17 +193,17 @@
                 <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Price Range</h3>
                 <div class="flex items-center gap-2">
                     <input
-                        type="number"
-                        placeholder="Min"
-                        class="w-full rounded-md border border-gray-200 px-3 py-1.5 text-sm"
-                        disabled
+                            type="number"
+                            placeholder="Min"
+                            class="w-full rounded-md border border-gray-200 px-3 py-1.5 text-sm"
+                            disabled
                     />
                     <span class="text-gray-400">-</span>
                     <input
-                        type="number"
-                        placeholder="Max"
-                        class="w-full rounded-md border border-gray-200 px-3 py-1.5 text-sm"
-                        disabled
+                            type="number"
+                            placeholder="Max"
+                            class="w-full rounded-md border border-gray-200 px-3 py-1.5 text-sm"
+                            disabled
                     />
                 </div>
             </div>
@@ -216,13 +216,13 @@
                     {#each products as product (product.slug)}
                         <ProductCard.Root class="h-full w-full" href={getProductUrl(product)}>
                             <ProductCard.Image
-                                class="grow"
-                                imageUrl={getImageUrl(product.mainImage)}
-                                imageAlt={product.mainImage?.alternativeText ?? product.name}
+                                    class="grow"
+                                    imageUrl={getImageUrl(product.mainImage)}
+                                    imageAlt={product.mainImage?.alternativeText ?? product.name}
                             />
 
                             <ProductCard.Actions
-                                isFavorite={product.isFavourite ?? false}
+                                    isFavorite={product.isFavourite ?? false}
                             />
 
                             <ProductCard.Description>
@@ -231,23 +231,16 @@
                                 {#if product.averageRating && product.averageRating > 0}
                                     <ProductCard.Rating rating={product.averageRating}/>
                                 {/if}
+                                {#if product.discountPercentage}
+                                    <ProductCard.DiscountBadge discountPercentage={product.discountPercentage}/>
+                                {/if}
 
                                 <div class="flex items-baseline gap-2">
-                                    {#if product.discountPrice != null}
-                                        <ProductCard.Price
-                                            price={product.discountPrice.toString()}
+                                    <ProductCard.Price
+                                            price={product.price}
+                                            discountedPrice={product.discountPrice}
                                             currency="₾"
-                                        />
-                                        <span class="text-sm text-gray-400 line-through">{product.price}₾</span>
-                                        {#if product.discountPercentage}
-                                            <span class="text-sm font-medium text-red-500">-{product.discountPercentage}%</span>
-                                        {/if}
-                                    {:else}
-                                        <ProductCard.Price
-                                            price={product.price.toString()}
-                                            currency="₾"
-                                        />
-                                    {/if}
+                                    />
                                 </div>
                             </ProductCard.Description>
                         </ProductCard.Root>
@@ -258,10 +251,10 @@
                 {#if pagination.pageCount > 1}
                     <nav class="mt-8 flex items-center justify-center gap-1" aria-label="Pagination">
                         <a
-                            href={pagination.page > 1 ? getPageUrl(pagination.page - 1) : undefined}
-                            class="inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors {pagination.page <= 1 ? 'pointer-events-none text-gray-300' : 'hover:bg-gray-100 text-gray-700'}"
-                            aria-label="Previous page"
-                            aria-disabled={pagination.page <= 1}
+                                href={pagination.page > 1 ? getPageUrl(pagination.page - 1) : undefined}
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors {pagination.page <= 1 ? 'pointer-events-none text-gray-300' : 'hover:bg-gray-100 text-gray-700'}"
+                                aria-label="Previous page"
+                                aria-disabled={pagination.page <= 1}
                         >
                             <ChevronLeft class="h-4 w-4"/>
                         </a>
@@ -271,9 +264,9 @@
                                 <span class="inline-flex h-9 w-9 items-center justify-center text-gray-400">...</span>
                             {:else}
                                 <a
-                                    href={getPageUrl(pageNum)}
-                                    class="inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition-colors {pageNum === pagination.page ? 'bg-primary text-primary-foreground' : 'hover:bg-gray-100 text-gray-700'}"
-                                    aria-current={pageNum === pagination.page ? 'page' : undefined}
+                                        href={getPageUrl(pageNum)}
+                                        class="inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition-colors {pageNum === pagination.page ? 'bg-primary text-primary-foreground' : 'hover:bg-gray-100 text-gray-700'}"
+                                        aria-current={pageNum === pagination.page ? 'page' : undefined}
                                 >
                                     {pageNum}
                                 </a>
@@ -281,10 +274,10 @@
                         {/each}
 
                         <a
-                            href={pagination.page < pagination.pageCount ? getPageUrl(pagination.page + 1) : undefined}
-                            class="inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors {pagination.page >= pagination.pageCount ? 'pointer-events-none text-gray-300' : 'hover:bg-gray-100 text-gray-700'}"
-                            aria-label="Next page"
-                            aria-disabled={pagination.page >= pagination.pageCount}
+                                href={pagination.page < pagination.pageCount ? getPageUrl(pagination.page + 1) : undefined}
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors {pagination.page >= pagination.pageCount ? 'pointer-events-none text-gray-300' : 'hover:bg-gray-100 text-gray-700'}"
+                                aria-label="Next page"
+                                aria-disabled={pagination.page >= pagination.pageCount}
                         >
                             <ChevronRight class="h-4 w-4"/>
                         </a>
