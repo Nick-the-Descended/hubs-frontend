@@ -20,7 +20,7 @@
 <div
         bind:this={ref}
         data-slot="product-card-discount"
-        class={cn('absolute top-0 left-0 w-fit h-fit px-2 py-1 font-bold text-white text-nowrap bg-red-700 rounded-[0_0_12px_0]', className)}
+        class={cn('absolute top-0 left-0 min-w-[6ch] w-fit h-fit px-2 py-1 font-bold text-center text-white text-nowrap bg-red-700 rounded-[0_0_12px_0]', className)}
         {...restProps}
 >
     -{discountPercentage}%
