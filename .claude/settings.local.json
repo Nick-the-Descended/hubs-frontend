@@ -11,7 +11,9 @@
       "Bash(npx shadcn-svelte@latest add:*)",
       "mcp__Figma_Desktop__get_design_context",
       "mcp__Figma_Desktop__get_screenshot",
-      "Bash(npx svelte-check:*)"
+      "Bash(npx svelte-check:*)",
+      "mcp__Figma_Desktop__get_metadata",
+      "Bash(npm run check:*)"
     ],
     "deny": [],
     "ask": []

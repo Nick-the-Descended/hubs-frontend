@@ -2,6 +2,7 @@
     import {onMount} from 'svelte';
     import {cartStore} from '$lib/stores/cart.svelte';
     import {customerStore} from '$lib/stores/customer.svelte';
+    import {localCartStore} from '$lib/stores/local-cart.svelte';
     import {setLocale} from '@/paraglide/runtime';
     import {browser} from '$app/environment';
     import '../app.css';
@@ -25,6 +26,7 @@
             cartStore.initialize(),
             customerStore.initialize()
         ]);
+        localCartStore.initialize();
     });
 </script>
 
