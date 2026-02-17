@@ -4,6 +4,8 @@
     import {Button} from '@/components/ui/button';
     import {PUBLIC_STRAPI_URL} from '$env/static/public';
     import {ChevronLeft, ChevronRight, ArrowUpDown} from '@lucide/svelte';
+    import {localCartStore} from '$lib/stores/local-cart.svelte';
+    import QuickView from '@/components/quick-view/QuickView.svelte';
 
     type StrapiImage = {
         name: string;
@@ -54,6 +56,14 @@
     };
 
     let {products, pagination, categories, activeCategory, breadcrumbs}: Props = $props();
+
+    let quickViewOpen = $state(false);
+    let quickViewProduct = $state<ProductItem | null>(null);
+
+    function openQuickView(product: ProductItem) {
+        quickViewProduct = product;
+        quickViewOpen = true;
+    }
 
     function getImageUrl(image: StrapiImage | null): string {
         if (!image?.url) return '/placeholder-image.png';
@@ -223,6 +233,19 @@
 
                             <ProductCard.Actions
                                     isFavorite={product.isFavourite ?? false}
+                                    onQuickViewClick={() => openQuickView(product)}
+                                    onAddToCartClick={() => {
+                                        localCartStore.addItem({
+                                            productSlug: product.slug,
+                                            name: product.name,
+                                            price: product.price,
+                                            discountPrice: product.discountPrice ?? null,
+                                            imageUrl: getImageUrl(product.mainImage),
+                                            size: null,
+                                            color: null,
+                                            branding: null
+                                        });
+                                    }}
                             />
 
                             <ProductCard.Description>
@@ -291,3 +314,5 @@
         </div>
     </div>
 </div>
+
+<QuickView bind:open={quickViewOpen} product={quickViewProduct} />

@@ -63,10 +63,12 @@
         "vitest": "^4.0.14"
     },
     "dependencies": {
+        "@internationalized/date": "^3.11.0",
         "@medusajs/js-sdk": "^2.13.1",
         "@medusajs/types": "^2.13.1",
         "@storybook/addon-styling-webpack": "^3.0.0",
         "@urql/svelte": "^5.0.0",
+        "bits-ui": "^2.15.6",
         "embla-carousel": "^8.6.0",
         "embla-carousel-autoplay": "^8.6.0",
         "embla-carousel-svelte": "^8.6.0",
