@@ -100,7 +100,9 @@ export interface Product {
 	avaliableColors: Array<{ hexCode: string; colorName: string }>;
 }
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, parent }) => {
+	await parent();
+
 	const locale = getLocale();
 	const strapiLocale = mapParaglideLocaleToStrapi(locale);
 

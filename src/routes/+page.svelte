@@ -5,6 +5,9 @@
     import FanShop from "@/components/home/fan-shop/FanShop.svelte";
     import {Button} from "@/components/ui/button";
     import Features from "@/components/home/features/Features.svelte";
+    import {localCartStore} from '$lib/stores/local-cart.svelte';
+    import {PUBLIC_STRAPI_URL} from '$env/static/public';
+    import type {ComponentFanShopProductItem} from '@/types/strapi-generated';
 
     let hero_images = [
         '/hero-images/Image%201.png',
@@ -26,126 +29,114 @@
         '/hero-images/Image%2017.png'
     ];
 
-    let products = [
+    let products: ComponentFanShopProductItem[] = [
         {
             id: '1',
-            imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 1',
-            name: 'Premium Wireless Headphones',
-            rating: 4.5,
-            price: '299.99',
-            currency: 'GEL',
-            isFavorite: false
+            slug: 'premium-wireless-headphones',
+            productName: 'Premium Wireless Headphones',
+            averageRating: 4.5,
+            price: 299.99,
+            isFavourite: false,
+            productImage: {url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=600&fit=crop', alternativeText: 'Sample product 1'} as any
         },
         {
             id: '2',
-            imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 2',
-            name: 'Smart Watch Pro',
-            rating: 4.8,
-            price: '449.99',
-            currency: 'GEL',
-            isFavorite: true
+            slug: 'smart-watch-pro',
+            productName: 'Smart Watch Pro',
+            averageRating: 4.8,
+            price: 449.99,
+            isFavourite: true,
+            productImage: {url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop', alternativeText: 'Sample product 2'} as any
         },
         {
             id: '3',
-            imageUrl: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 3',
-            name: 'Designer Sunglasses',
-            rating: 4.2,
-            price: '189.99',
-            currency: 'GEL',
-            isFavorite: false
+            slug: 'designer-sunglasses',
+            productName: 'Designer Sunglasses',
+            averageRating: 4.2,
+            price: 189.99,
+            isFavourite: false,
+            productImage: {url: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop', alternativeText: 'Sample product 3'} as any
         },
         {
             id: '4',
-            imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 4',
-            name: 'Running Shoes Elite',
-            rating: 4.7,
-            price: '159.99',
-            currency: 'GEL',
-            isFavorite: false
+            slug: 'running-shoes-elite',
+            productName: 'Running Shoes Elite',
+            averageRating: 4.7,
+            price: 159.99,
+            isFavourite: false,
+            productImage: {url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=600&fit=crop', alternativeText: 'Sample product 4'} as any
         },
         {
             id: '5',
-            imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 5',
-            name: 'Leather Backpack',
-            rating: 4.6,
-            price: '129.99',
-            currency: 'GEL',
-            isFavorite: false
+            slug: 'leather-backpack',
+            productName: 'Leather Backpack',
+            averageRating: 4.6,
+            price: 129.99,
+            isFavourite: false,
+            productImage: {url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop', alternativeText: 'Sample product 5'} as any
         },
         {
             id: '6',
-            imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 6',
-            name: 'Vintage Camera',
-            rating: 4.9,
-            price: '599.99',
-            currency: 'GEL',
-            isFavorite: true
+            slug: 'vintage-camera',
+            productName: 'Vintage Camera',
+            averageRating: 4.9,
+            price: 599.99,
+            isFavourite: true,
+            productImage: {url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop', alternativeText: 'Sample product 6'} as any
         },
         {
             id: '7',
-            imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 1',
-            name: 'Premium Wireless Headphones',
-            rating: 4.5,
-            price: '299.99',
-            currency: 'GEL',
-            isFavorite: false
+            slug: 'premium-wireless-headphones-2',
+            productName: 'Premium Wireless Headphones',
+            averageRating: 4.5,
+            price: 299.99,
+            isFavourite: false,
+            productImage: {url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=600&fit=crop', alternativeText: 'Sample product 1'} as any
         },
         {
             id: '8',
-            imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 2',
-            name: 'Smart Watch Pro',
-            rating: 4.8,
-            price: '449.99',
-            currency: 'GEL',
-            isFavorite: true
+            slug: 'smart-watch-pro-2',
+            productName: 'Smart Watch Pro',
+            averageRating: 4.8,
+            price: 449.99,
+            isFavourite: true,
+            productImage: {url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop', alternativeText: 'Sample product 2'} as any
         },
         {
             id: '9',
-            imageUrl: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 3',
-            name: 'Designer Sunglasses',
-            rating: 4.2,
-            price: '189.99',
-            currency: 'GEL',
-            isFavorite: false
+            slug: 'designer-sunglasses-2',
+            productName: 'Designer Sunglasses',
+            averageRating: 4.2,
+            price: 189.99,
+            isFavourite: false,
+            productImage: {url: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop', alternativeText: 'Sample product 3'} as any
         },
         {
             id: '10',
-            imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 4',
-            name: 'Running Shoes Elite',
-            rating: 4.7,
-            price: '159.99',
-            currency: 'GEL',
-            isFavorite: false
+            slug: 'running-shoes-elite-2',
+            productName: 'Running Shoes Elite',
+            averageRating: 4.7,
+            price: 159.99,
+            isFavourite: false,
+            productImage: {url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=600&fit=crop', alternativeText: 'Sample product 4'} as any
         },
         {
             id: '11',
-            imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 5',
-            name: 'Leather Backpack',
-            rating: 4.6,
-            price: '129.99',
-            currency: 'GEL',
-            isFavorite: false
+            slug: 'leather-backpack-2',
+            productName: 'Leather Backpack',
+            averageRating: 4.6,
+            price: 129.99,
+            isFavourite: false,
+            productImage: {url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop', alternativeText: 'Sample product 5'} as any
         },
         {
             id: '12',
-            imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop',
-            imageAlt: 'Sample product 6',
-            name: 'Vintage Camera',
-            rating: 4.9,
-            price: '599.99',
-            currency: 'GEL',
-            isFavorite: true
+            slug: 'vintage-camera-2',
+            productName: 'Vintage Camera',
+            averageRating: 4.9,
+            price: 599.99,
+            isFavourite: true,
+            productImage: {url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop', alternativeText: 'Sample product 6'} as any
         }
     ];
 
@@ -159,9 +150,21 @@
         // Open quick view modal
     }
 
-    function handleAddToCart(productId: string): void {
-        console.log('Add to cart product:', productId);
-        // Add product to cart
+    function handleAddToCart(product: ComponentFanShopProductItem): void {
+        const rawUrl = product.productImage?.url;
+        const imageUrl = rawUrl
+            ? (rawUrl.startsWith('http') ? rawUrl : `${PUBLIC_STRAPI_URL}${rawUrl}`)
+            : '/placeholder-image.png';
+        localCartStore.addItem({
+            productSlug: product.slug,
+            name: product.productName,
+            price: product.price,
+            discountPrice: product.discountedPrice ?? null,
+            imageUrl,
+            size: null,
+            color: null,
+            branding: null
+        });
     }
 </script>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {cartStore} from '@/stores/cart.svelte';
+    import {localCartStore} from '@/stores/local-cart.svelte';
     import {customerStore} from '@/stores/customer.svelte';
     import {LanguageSwitcher} from '@/components/ui/language-switcher';
     import * as m from '@/paraglide/messages';
@@ -29,7 +29,7 @@
     let timeoutId: number | null = null;
 
     // Derived state for cart item count
-    let cartItemCount = $derived(cartStore?.itemCount || 0);
+    let cartItemCount = $derived(localCartStore.itemCount);
     let isAuthenticated = $derived(customerStore.isAuthenticated);
     let customerName = $derived(customerStore.customer?.first_name || m.my_account());
 

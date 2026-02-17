@@ -3,8 +3,9 @@
     import {PUBLIC_STRAPI_URL} from '$env/static/public';
     import * as Breadcrumb from '@/components/ui/breadcrumb';
     import ProductCardSlider from '@/components/slider/ProductCardSlider.svelte';
-    import type {ComponentDefaultNavigationItem} from '@/types/strapi-generated';
+    import type {ComponentDefaultNavigationItem, ComponentFanShopProductItem} from '@/types/strapi-generated';
     import {Button} from "@/components/ui/button";
+    import {localCartStore} from '$lib/stores/local-cart.svelte';
 
     let {data}: { data: PageData } = $props();
 
@@ -252,7 +253,21 @@
                             baseUrl="/products/fan-shop"
                             onFavoriteClick={(productId) => console.log('Favorite:', productId)}
                             onQuickViewClick={(productId) => console.log('Quick view:', productId)}
-                            onAddToCartClick={(productId) => console.log('Add to cart:', productId)}
+                            onAddToCartClick={(product) => {
+                                const imageUrl = product.productImage?.url
+                                    ? `${PUBLIC_STRAPI_URL}${product.productImage.url}`
+                                    : '/placeholder-image.png';
+                                localCartStore.addItem({
+                                    productSlug: product.slug,
+                                    name: product.productName,
+                                    price: product.price,
+                                    discountPrice: product.discountedPrice ?? null,
+                                    imageUrl,
+                                    size: null,
+                                    color: null,
+                                    branding: null
+                                });
+                            }}
                             tallCards={true}
                     />
                 </div>

@@ -10,7 +10,7 @@
         products: ComponentFanShopProductItem[];
         onFavoriteClick?: (productId: string) => void;
         onQuickViewClick?: (productId: string) => void;
-        onAddToCartClick?: (productId: string) => void;
+        onAddToCartClick?: (product: ComponentFanShopProductItem) => void;
         slidesToShow?: number;
         tallCards?: boolean;
         baseUrl?: string;
@@ -120,7 +120,7 @@
                         <ProductCard.Actions
                                 onFavoriteClick={() => onFavoriteClick?.(product.id)}
                                 onQuickViewClick={() => onQuickViewClick?.(product.id)}
-                                onAddToCartClick={() => onAddToCartClick?.(product.id)}
+                                onAddToCartClick={() => onAddToCartClick?.(product)}
                                 isFavorite={product.isFavourite}
                         />
 

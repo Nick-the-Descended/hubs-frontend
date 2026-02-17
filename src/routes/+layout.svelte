@@ -22,11 +22,10 @@
             }
         }
 
-        await Promise.all([
-            cartStore.initialize(),
-            customerStore.initialize()
-        ]);
         localCartStore.initialize();
+        // Backend stores initialize independently — don't block if backend is unreachable
+        cartStore.initialize().catch(() => {});
+        customerStore.initialize().catch(() => {});
     });
 </script>
 
