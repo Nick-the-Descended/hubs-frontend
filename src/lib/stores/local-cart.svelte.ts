@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 
 const STORAGE_KEY = 'local_cart_items';
+const COOKIE_KEY = 'local_cart';
 
 export interface LocalCartItem {
 	productSlug: string;
@@ -38,11 +39,15 @@ class LocalCartStore {
 		} catch {
 			this.items = [];
 		}
+		this.persist();
 	}
 
 	private persist() {
 		if (!browser) return;
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items));
+		const json = JSON.stringify(this.items);
+		localStorage.setItem(STORAGE_KEY, json);
+		// Sync to cookie so server can read cart data
+		document.cookie = `${COOKIE_KEY}=${encodeURIComponent(json)};path=/;max-age=${60 * 60 * 24 * 30};SameSite=Lax`;
 	}
 
 	addItem(item: Omit<LocalCartItem, 'quantity'>, quantity = 1) {

@@ -25,11 +25,15 @@
 </script>
 
 <!-- Action Buttons Overlay -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
         class={cn(
-        'absolute top-3 right-3 flex flex-col gap-2',
+        'absolute top-3 right-3 z-10 flex flex-col gap-2',
         className
     )}
+        onclick={(e) => e.stopPropagation()}
+        onpointerdown={(e) => e.stopPropagation()}
         {...restProps}
 >
     <Button

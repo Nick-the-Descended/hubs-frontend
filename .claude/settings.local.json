@@ -13,7 +13,8 @@
       "mcp__Figma_Desktop__get_screenshot",
       "Bash(npx svelte-check:*)",
       "mcp__Figma_Desktop__get_metadata",
-      "Bash(npm run check:*)"
+      "Bash(npm run check:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": [],
     "ask": []

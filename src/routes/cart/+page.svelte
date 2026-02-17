@@ -1,6 +1,11 @@
 <script lang="ts">
-    import {localCartStore} from '$lib/stores/local-cart.svelte';
+    import {onMount} from 'svelte';
+    import {browser} from '$app/environment';
+    import {localCartStore, type LocalCartItem} from '$lib/stores/local-cart.svelte';
     import {Minus, Plus, Trash2, Heart, Copy, Share2, Truck, MapPin, TicketPercent, ChevronDown} from '@lucide/svelte';
+    import type {PageData} from './$types';
+
+    let {data}: { data: PageData } = $props();
 
     let activeTab = $state<'my' | 'shared'>('my');
     let discountCode = $state('');
@@ -17,8 +22,19 @@
     let floor = $state('');
     let postalCode = $state('');
 
+    // Use server-loaded cart items initially, then switch to reactive local store after hydration
+    let hydrated = $state(false);
+    onMount(() => { hydrated = true; });
+
+    const cartItems: LocalCartItem[] = $derived(
+        hydrated ? localCartStore.items : (data.cartItems ?? [])
+    );
+    const itemCount = $derived(cartItems.reduce((sum, item) => sum + item.quantity, 0));
+    const subtotal = $derived(cartItems.reduce((sum, item) => {
+        const price = item.discountPrice ?? item.price;
+        return sum + price * item.quantity;
+    }, 0));
     const deliveryFee = $derived(selectedDelivery === 'express' ? 10 : 0);
-    const subtotal = $derived(localCartStore.total);
     const total = $derived(subtotal + deliveryFee);
 </script>
 
@@ -61,10 +77,10 @@
 
                 <!-- Product list -->
                 <div class="flex flex-col gap-3 p-9">
-                    {#if localCartStore.items.length === 0}
+                    {#if cartItems.length === 0}
                         <p class="py-12 text-center text-gray-500">კალათა ცარიელია</p>
                     {:else}
-                        {#each localCartStore.items as item, index (index)}
+                        {#each cartItems as item, index (index)}
                             <!-- Product row -->
                             <div class="flex items-start justify-between max-w-[800px] w-full">
                                 <!-- Left: Product info -->
@@ -158,7 +174,7 @@
                             </div>
 
                             <!-- Divider -->
-                            {#if index < localCartStore.items.length - 1}
+                            {#if index < cartItems.length - 1}
                                 <div class="h-px bg-gray-100 w-full"></div>
                             {/if}
                         {/each}
@@ -266,7 +282,7 @@
                     <div class="flex flex-col gap-4 text-base text-black/70">
                         <h2 class="uppercase">შეკვეთის მიმოხილვა</h2>
                         <div class="flex flex-col gap-6 px-6">
-                            {#each localCartStore.items as item}
+                            {#each cartItems as item}
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-4">
                                         <span class="w-5">x{item.quantity}</span>
