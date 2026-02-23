@@ -1,0 +1,19 @@
+import { sdk } from '$lib/sdk';
+import { medusaProductToCard } from '$lib/types/medusa-adapter';
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async () => {
+    try {
+        const { products } = await sdk.store.product.list({
+            limit: 12,
+            fields: '+variants.calculated_price,+variants.options,+options,+categories,+images',
+        } as any);
+
+        return {
+            products: (products ?? []).map(medusaProductToCard),
+        };
+    } catch (error) {
+        console.error('Error fetching home page products from Medusa:', error);
+        return { products: [] };
+    }
+};
