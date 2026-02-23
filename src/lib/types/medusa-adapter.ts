@@ -27,15 +27,16 @@ export interface ProductCardItem {
 }
 
 export function medusaProductToCard(product: StoreProduct): ProductCardItem {
-    const firstVariant = product.variants?.[0] as StoreProductVariant | undefined;
+    const firstVariant = product.variants?.[0];  // already typed as StoreProductVariant
 
     const calculatedPrice = firstVariant?.calculated_price;
-    const priceInCents = calculatedPrice?.calculated_amount ?? 0;
+    // calculated_amount is number | null — null means "not priced for this context"
+    const priceInCents = calculatedPrice?.calculated_amount ?? null;
     const originalPriceInCents = calculatedPrice?.original_amount ?? priceInCents;
 
-    const price = priceInCents / 100;
-    const originalPrice = originalPriceInCents / 100;
-    const hasDiscount = originalPrice > price;
+    const price = (priceInCents ?? 0) / 100;
+    const originalPrice = (originalPriceInCents ?? priceInCents ?? 0) / 100;
+    const hasDiscount = priceInCents !== null && originalPriceInCents !== null && originalPrice > price;
 
     const discountPercentage = hasDiscount
         ? Math.round(((originalPrice - price) / originalPrice) * 100)
@@ -56,12 +57,15 @@ export function medusaProductToCard(product: StoreProduct): ProductCardItem {
         : null;
 
     const variants = (product.variants ?? []).map((v) => {
-        const variantCalcPrice = (v as StoreProductVariant).calculated_price;
-        const variantPrice = (variantCalcPrice?.calculated_amount ?? 0) / 100;
-        const variantOriginalPrice = (variantCalcPrice?.original_amount ?? 0) / 100;
+        const variantCalcPrice = v.calculated_price;  // v is already StoreProductVariant, no cast needed
+        const vPriceInCents = variantCalcPrice?.calculated_amount ?? null;
+        const vOrigPriceInCents = variantCalcPrice?.original_amount ?? vPriceInCents;
+        const variantPrice = (vPriceInCents ?? 0) / 100;
+        const variantOriginalPrice = (vOrigPriceInCents ?? 0) / 100;
 
         const options: Record<string, string> = {};
         for (const opt of (v.options ?? [])) {
+            if (!opt.option_id) continue;  // skip orphaned option values with null option_id
             const optionTitle = product.options?.find((o) => o.id === opt.option_id)?.title ?? opt.option_id;
             options[optionTitle] = opt.value;
         }
@@ -103,7 +107,7 @@ export function medusaPagination(count: number, page: number, pageSize: number):
     return {
         page,
         pageSize,
-        pageCount: Math.ceil(count / pageSize),
+        pageCount: pageSize > 0 ? Math.ceil(count / pageSize) : 0,
         total: count,
     };
 }
