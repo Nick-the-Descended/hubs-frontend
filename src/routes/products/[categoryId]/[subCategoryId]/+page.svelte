@@ -1,11 +1,20 @@
 <script lang="ts">
-    import { page } from '$app/state';
+    import type { PageData } from './$types';
+    import ProductsGrid from '@/components/products-grid/ProductsGrid.svelte';
 
-    let categoryId = $state(page.params.categoryId);
-    let subCategoryId = $state(page.params.subCategoryId);
+    let { data }: { data: PageData } = $props();
+
+    const breadcrumbs = $derived([
+        { label: 'Home', href: '/' },
+        { label: 'Products', href: '/products/all' },
+        { label: data.categoryName || data.categorySlug || '' },
+    ]);
 </script>
 
-<div class="container">
-    <h1>Category: {categoryId} / {subCategoryId}</h1>
-    <!-- Add your subcategory products listing here -->
-</div>
+<ProductsGrid
+    products={data.products}
+    pagination={data.pagination}
+    categories={data.categories}
+    activeCategory={data.categorySlug}
+    {breadcrumbs}
+/>
