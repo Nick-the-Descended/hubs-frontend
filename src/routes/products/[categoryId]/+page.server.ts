@@ -12,13 +12,26 @@ export const load: PageServerLoad = async ({ params, url, parent }) => {
     const offset = (page - 1) * PAGE_SIZE;
 
     try {
+        // Resolve category handle → ID (Medusa filters by category_id, not handle)
+        let categoryId: string | null = null;
+        let activeCategoryName: string | null = null;
+
+        if (categoryHandle) {
+            const { product_categories: matched } = await sdk.store.category.list({
+                handle: categoryHandle,
+                limit: 1,
+            } as any);
+            categoryId = matched?.[0]?.id ?? null;
+            activeCategoryName = matched?.[0]?.name ?? null;
+        }
+
         const query: Record<string, unknown> = {
             limit: PAGE_SIZE,
             offset,
             fields: '+variants.calculated_price,+variants.options,+options,+categories,+images',
         };
-        if (categoryHandle) {
-            query['category_handle[]'] = categoryHandle;
+        if (categoryId) {
+            query.category_id = categoryId;
         }
 
         const { products, count } = await sdk.store.product.list(query as any);
@@ -38,7 +51,7 @@ export const load: PageServerLoad = async ({ params, url, parent }) => {
             pagination: medusaPagination(count ?? 0, page, PAGE_SIZE),
             categories,
             categorySlug: categoryHandle,
-            categoryName: activeCategory_?.name ?? null,
+            categoryName: activeCategoryName ?? activeCategory_?.name ?? null,
             navigationItems: header?.navigationItems ?? [],
         };
     } catch (error) {
