@@ -6,12 +6,12 @@
     import {cartStore} from '$lib/stores/cart.svelte';
 
     type StrapiImage = {
-        name: string;
+        name?: string;
         alternativeText: string | null;
-        width: number;
-        height: number;
+        width?: number;
+        height?: number;
         url: string;
-        previewUrl: string | null;
+        previewUrl?: string | null;
     };
 
     type QuickViewProduct = {

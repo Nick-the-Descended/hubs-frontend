@@ -12,7 +12,7 @@
 
     // Find the fan-shop navigation item and use its subcategories
     const fanShopNavItem = $derived(
-        data.navigationItems.find(item => item.href?.includes('fan-shop'))
+        data.navigationItems.find(item => item?.href?.includes('fan-shop'))
     );
     const navigationItems = $derived(fanShopNavItem?.subcategories || []);
 
