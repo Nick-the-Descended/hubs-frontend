@@ -3,32 +3,14 @@
     import {customerStore} from '@/stores/customer.svelte';
     import {LanguageSwitcher} from '@/components/ui/language-switcher';
     import * as m from '@/paraglide/messages';
-
-    // Props with Svelte 5 runes for reactivity
-    interface ProductType {
-        productType: string;
-        href: string;
-    }
-
-    interface Subcategory {
-        label: string;
-        href: string;
-        iconSrc?: string;
-        description?: string;
-        subcategories?: Array<ProductType>;
-    }
-
-    interface NavigationItem {
-        label: string;
-        href: string;
-        subcategories?: Array<Subcategory>;
-    }
+    import type {ComponentDefaultNavigationItem} from '@/types/strapi-generated';
+    import {PUBLIC_STRAPI_URL} from '$env/static/public';
 
     interface Props {
         promotionalBanner?: string;
         logoUrl?: string;
         logoAlt?: string;
-        navigationItems: Array<NavigationItem>;
+        navigationItems: Array<ComponentDefaultNavigationItem>;
     }
 
     let {
@@ -47,9 +29,17 @@
     let timeoutId: number | null = null;
 
     // Derived state for cart item count
-    let cartItemCount = $derived(cartStore?.itemCount || 0);
+    let cartItemCount = $derived(cartStore.itemCount);
     let isAuthenticated = $derived(customerStore.isAuthenticated);
     let customerName = $derived(customerStore.customer?.first_name || m.my_account());
+
+    // Derived state for subcategories visibility
+    let showSubcategories = $derived(
+        hoveredItemIndex !== null &&
+        hoveredItemIndex >= 0 &&
+        hoveredItemIndex < navigationItems.length &&
+        (navigationItems[hoveredItemIndex].subcategories?.length ?? 0) > 0
+    );
 
     // Functions
     function handleSearch(event: Event) {
@@ -71,7 +61,7 @@
             if (!isOverlayHovered) {
                 hoveredItemIndex = null;
             }
-        }, 100);
+        }, 200);
     }
 
     function handleOverlayEnter() {
@@ -101,7 +91,7 @@
         <div class="flex items-center justify-between gap-4">
             <!-- Logo -->
             <a href="/" class="flex-shrink-0" aria-label="Home">
-                <img src={logoUrl} alt={logoAlt} class="h-12 w-auto"/>
+                <img src={logoUrl||"/logo.svg"} alt={logoAlt||"Hubs.ge"} class="h-12 w-auto"/>
             </a>
 
             <!-- Search Bar -->
@@ -212,10 +202,10 @@
 >
     <div class="container mx-auto px-4">
         <ul class="flex items-center justify-start ml-16">
-            {#each navigationItems as item, index (item.href)}
+            {#each navigationItems as item, index (index)}
                 <li class="relative">
                     <a
-                            href={item.href}
+                            href={`/products${item.href}`}
                             class="block text-sm font-medium transition-colors px-4 py-4 hover:bg-gray-300/30 active:bg-gray-300/30"
                             onmouseenter={() => handleNavItemEnter(index)}
                             onmouseleave={handleNavItemLeave}
@@ -228,59 +218,58 @@
     </div>
 
     <!-- Subcategory Overlay -->
-    {#if hoveredItemIndex !== null && navigationItems[hoveredItemIndex]?.subcategories}
+    {#if showSubcategories && hoveredItemIndex !== null}
         {@const currentItem = navigationItems[hoveredItemIndex]}
         <div
                 role="menu"
                 tabindex="-1"
-                class="absolute left-0 right-0 top-full z-50 bg-white border-t border-gray-200 shadow-lg animate-fade-in"
+                class="absolute left-0 right-0 top-full z-50 bg-white shadow-lg animate-fade-in"
                 onmouseenter={handleOverlayEnter}
                 onmouseleave={handleOverlayLeave}
         >
             <div class="container mx-auto px-4 py-8">
                 <div class="grid grid-cols-4 gap-8">
-                    {#each currentItem.subcategories || [] as subcategory (subcategory.href)}
-                        <div class="space-y-3">
-                            <!-- Subcategory Header with Icon -->
-                            <a
-                                    href={subcategory.href}
-                                    class="group flex items-center gap-3 rounded-lg p-3 hover:bg-gray-50 transition-colors"
-                            >
-                                {#if subcategory.iconSrc}
-                                    <img
-                                            src={subcategory.iconSrc}
-                                            alt={subcategory.label}
-                                            class="h-6 w-6 object-contain flex-shrink-0 text-xs"
-                                    />
-                                {/if}
-                                <div class="flex-1 min-w-0">
-                                    <h3 class="text-sm font-semibold text-gray-900 group-hover:text-gray-600 truncate">
-                                        {subcategory.label}
-                                    </h3>
-                                    {#if subcategory.description}
-                                        <p class="mt-0.5 text-xs text-gray-500 line-clamp-2">
-                                            {subcategory.description}
-                                        </p>
+                    {#each currentItem.subcategories || [] as subcategory, index (index)}
+                        {#if subcategory}
+                            <div class="space-y-3">
+                                <!-- Subcategory Header with Icon -->
+                                <a
+                                        href={`/products${subcategory.href}`}
+                                        class="group flex items-center gap-3 rounded-lg p-3 hover:bg-gray-50 transition-colors"
+                                >
+                                    {#if subcategory.hasIcon}
+                                        <img
+                                                src={`${PUBLIC_STRAPI_URL}${subcategory.icon.url}`}
+                                                alt={subcategory.label}
+                                                class="h-6 w-6 object-contain flex-shrink-0"
+                                        />
                                     {/if}
-                                </div>
-                            </a>
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="text-sm font-semibold text-gray-900 group-hover:text-gray-600 truncate">
+                                            {subcategory.label}
+                                        </h3>
+                                    </div>
+                                </a>
 
-                            <!-- Product Types List -->
-                            {#if subcategory.subcategories && subcategory.subcategories.length > 0}
-                                <ul class="space-y-1 pl-3 border-l-2 border-gray-100">
-                                    {#each subcategory.subcategories as productType }
-                                        <li>
-                                            <a
-                                                    href={productType.href}
-                                                    class="block text-xs text-gray-600 hover:text-gray-900 py-1 px-2 rounded hover:bg-gray-50 transition-colors"
-                                            >
-                                                {productType.productType}
-                                            </a>
-                                        </li>
-                                    {/each}
-                                </ul>
-                            {/if}
-                        </div>
+                                <!-- Product Types List -->
+                                {#if subcategory.subcategories && subcategory.subcategories.length > 0}
+                                    <ul class="space-y-1 pl-3 border-l-2 border-gray-100">
+                                        {#each subcategory.subcategories as productType}
+                                            {#if productType && productType.label}
+                                                <li>
+                                                    <a
+                                                            class="block text-xs text-gray-600 hover:text-gray-900 py-1 px-2 rounded hover:bg-gray-50 transition-colors"
+                                                            href={`/products${subcategory.href}?type=${productType.label}`}
+                                                    >
+                                                        {productType.label}
+                                                    </a>
+                                                </li>
+                                            {/if}
+                                        {/each}
+                                    </ul>
+                                {/if}
+                            </div>
+                        {/if}
                     {/each}
                 </div>
             </div>

@@ -4,7 +4,7 @@
     import {Button} from '@/components/ui/button';
     import {PUBLIC_STRAPI_URL} from '$env/static/public';
     import {ChevronLeft, ChevronRight, ArrowUpDown} from '@lucide/svelte';
-    import {localCartStore} from '$lib/stores/local-cart.svelte';
+    import {cartStore} from '$lib/stores/cart.svelte';
     import QuickView from '@/components/quick-view/QuickView.svelte';
 
     import type { ProductCardItem } from '$lib/types/medusa-adapter';
@@ -217,16 +217,11 @@
                                     isFavorite={product.isFavourite ?? false}
                                     onQuickViewClick={() => openQuickView(product)}
                                     onAddToCartClick={() => {
-                                        localCartStore.addItem({
-                                            productSlug: product.slug,
-                                            name: product.name,
-                                            price: product.price,
-                                            discountPrice: product.discountPrice ?? null,
-                                            imageUrl: getImageUrl(product.mainImage),
-                                            size: null,
-                                            color: null,
-                                            branding: null
-                                        });
+                                        if (product.firstVariantId) {
+                                            cartStore.addItem(product.firstVariantId, 1).catch((err) => {
+                                                console.error('Failed to add to cart:', err);
+                                            });
+                                        }
                                     }}
                             />
 
