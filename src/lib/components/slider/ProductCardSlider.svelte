@@ -131,8 +131,8 @@
 
                             <!-- Price and Add to Cart -->
                             <ProductCard.Price
-                                    price={product.price.toString()}
-                                    discountedPrice={product.discountPrice?.toString()}
+                                    price={product.price}
+                                    discountedPrice={product.discountPrice ?? null}
                                     currency="₾"
                             />
                         </ProductCard.Description>

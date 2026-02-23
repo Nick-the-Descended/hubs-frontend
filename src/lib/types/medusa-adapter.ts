@@ -85,7 +85,7 @@ export function medusaProductToCard(product: StoreProduct): ProductCardItem {
         shortDescription: product.subtitle ?? null,
         averageRating: null,
         price,
-        discountPrice: hasDiscount ? price : null,
+        discountPrice: hasDiscount ? originalPrice : null,
         discountPercentage,
         isFavourite: null,
         category: category ? { name: category.name, slug: category.handle } : null,
