@@ -76,7 +76,7 @@
     const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
     // Generate page numbers for pagination
-    const pageNumbers = $derived(() => {
+    const pageNumbers = $derived.by(() => {
         const pages: number[] = [];
         const current = pagination.page;
         const total = pagination.pageCount;
@@ -264,7 +264,7 @@
                             <ChevronLeft class="h-4 w-4"/>
                         </a>
 
-                        {#each pageNumbers() as pageNum (pageNum)}
+                        {#each pageNumbers as pageNum (pageNum)}
                             {#if pageNum === -1}
                                 <span class="inline-flex h-9 w-9 items-center justify-center text-gray-400">...</span>
                             {:else}
