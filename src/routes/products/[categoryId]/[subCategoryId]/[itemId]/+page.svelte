@@ -9,7 +9,14 @@
 
     let selectedImageIndex = $state(0);
     let selectedOptions = $state<Record<string, string>>({});
-    let activeTab = $state<'overview' | 'details' | 'reviews'>('overview');
+    let activeTab = $state<'overview' | 'reviews'>('overview');
+
+    // Reset selection state when navigating between products (SvelteKit reuses the component)
+    $effect(() => {
+        product?.id;
+        selectedImageIndex = 0;
+        selectedOptions = {};
+    });
     let brandingName = $state('');
     let brandingNumber = $state('');
     let brandingOption = $state('');
@@ -38,6 +45,9 @@
     const displayPrice = $derived(selectedVariant?.price ?? product?.price ?? 0);
     const originalPrice = $derived(selectedVariant?.originalPrice ?? product?.originalPrice ?? 0);
     const hasDiscount = $derived(originalPrice > displayPrice);
+    const discountPercentage = $derived(
+        hasDiscount ? Math.round(((originalPrice - displayPrice) / originalPrice) * 100) : null
+    );
 
     const sizeOption = $derived(product?.options?.find((o) => o.title === 'Size') ?? null);
     const colorOption = $derived(product?.options?.find((o) => o.title === 'Color') ?? null);
@@ -143,8 +153,8 @@
                     <span class="text-3xl font-bold text-gray-900">{displayPrice} ₾</span>
                     {#if hasDiscount}
                         <span class="text-lg text-gray-400 line-through">{originalPrice} ₾</span>
-                        {#if product.discountPercentage}
-                            <span class="bg-red-700 text-white text-sm font-bold px-2 py-1 rounded">-{product.discountPercentage}%</span>
+                        {#if discountPercentage}
+                            <span class="bg-red-700 text-white text-sm font-bold px-2 py-1 rounded">-{discountPercentage}%</span>
                         {/if}
                     {/if}
                 </div>
