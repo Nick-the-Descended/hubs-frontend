@@ -50,9 +50,20 @@ class CartStore {
 
     async create(regionId?: string) {
         try {
+            let resolvedRegionId = regionId;
+
+            if (!resolvedRegionId) {
+                try {
+                    const { regions } = await sdk.store.region.list({ limit: 1 } as any);
+                    resolvedRegionId = regions?.[0]?.id;
+                } catch {
+                    console.warn('Could not fetch regions; creating cart without region_id');
+                }
+            }
+
             const payload: any = {};
-            if (regionId) {
-                payload.region_id = regionId;
+            if (resolvedRegionId) {
+                payload.region_id = resolvedRegionId;
             }
 
             const { cart } = await sdk.store.cart.create(payload);
