@@ -5,6 +5,7 @@ import Actions from './product-card-actions.svelte';
 import Price from './product-card-price.svelte';
 import Title from './product-card-title.svelte';
 import Description from './product-card-description.svelte';
+import Discount from './product-card-discount.svelte';
 
 export {
     Root,
@@ -14,6 +15,7 @@ export {
     Price,
     Title,
     Description,
+    Discount,
     //
     Root as ProductCard,
     Rating as ProductCardRating,
@@ -22,4 +24,5 @@ export {
     Price as ProductCardPrice,
     Title as ProductCardTitle,
     Description as ProductCardDescription,
+    Discount as DiscountBadge,
 };

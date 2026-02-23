@@ -1,0 +1,9 @@
+schema: https://cms.znagti.ge/graphql
+documents:
+  - 'src/**/*.{graphql,gql,svelte,ts,js}'
+extensions:
+  endpoints:
+    default:
+      url: https://cms.znagti.ge/graphql
+      headers:
+        user-agent: JS GraphQL

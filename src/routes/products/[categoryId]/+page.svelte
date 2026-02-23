@@ -1,10 +1,27 @@
 <script lang="ts">
-    import { page } from '$app/state';
+    import type {PageData} from './$types';
+    import ProductsGrid from '@/components/products-grid/ProductsGrid.svelte';
 
-    let categoryId = $state(page.params.categoryId);
+    let {data}: { data: PageData } = $props();
+
+    const breadcrumbs = $derived(
+        data.categorySlug
+            ? [
+                {label: 'Home', href: '/'},
+                {label: 'Products', href: '/products/all'},
+                {label: data.categoryName || ''}
+            ]
+            : [
+                {label: 'Home', href: '/'},
+                {label: 'Products'}
+            ]
+    );
 </script>
 
-<div class="container">
-    <h1>Category: {categoryId}</h1>
-    <!-- Add your category products listing here -->
-</div>
+<ProductsGrid
+    products={data.products}
+    pagination={data.pagination}
+    categories={data.categories}
+    activeCategory={data.categorySlug}
+    {breadcrumbs}
+/>

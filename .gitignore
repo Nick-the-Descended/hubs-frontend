@@ -27,3 +27,6 @@ storybook-static
 
 # Paraglide
 src/lib/paraglide
+
+#inlang
+project.inlang/cache/*

@@ -1,0 +1,35 @@
+query FanShop($locale: I18NLocaleCode) {
+    fanShop(locale: $locale) {
+        slug
+        Banner {
+            id
+            Image {
+                width
+                height
+                ext
+                url
+                name
+            }
+            buttonText
+        }
+        productListTitle
+        seeMore
+        productList {
+            id
+            productImage {
+                width
+                height
+                ext
+                url
+                name
+            }
+            productName
+            slug
+            price
+            discountedPrice
+            averageRating
+            discountPercent
+            isFavourite
+        }
+    }
+}
