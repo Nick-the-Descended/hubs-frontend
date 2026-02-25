@@ -1,13 +1,13 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { customerStore } from '$lib/stores/customer.svelte';
+    import { logoutWithCart } from '$lib/stores/cart-auth.svelte';
     import { goto } from '$app/navigation';
 
     let loggingOut = $state(true);
 
     onMount(async () => {
         try {
-            await customerStore.logout();
+            await logoutWithCart();
             // Redirect to home page after logout
             setTimeout(() => {
                 goto('/');

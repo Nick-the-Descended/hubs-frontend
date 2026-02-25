@@ -1,5 +1,6 @@
 <script lang="ts">
     import { customerStore } from '$lib/stores/customer.svelte';
+    import { loginWithCart } from '$lib/stores/cart-auth.svelte';
     import { goto } from '$app/navigation';
     import { page } from '$app/state';
 
@@ -11,14 +12,17 @@
     const verified = $derived(
         page.url.searchParams.get('verified') === 'true'
     );
+    const redirectTo = $derived(
+        page.url.searchParams.get('redirect') || '/profile'
+    );
 
     async function handleLogin(e: Event) {
         e.preventDefault();
         error = '';
 
         try {
-            await customerStore.login(email, password);
-            goto('/profile');
+            await loginWithCart(email, password);
+            goto(redirectTo);
         } catch (err: any) {
             error =
                 err.message ||

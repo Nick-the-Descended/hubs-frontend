@@ -2,6 +2,7 @@
     import {onMount} from 'svelte';
     import {cartStore} from '$lib/stores/cart.svelte';
     import {customerStore} from '$lib/stores/customer.svelte';
+    import {transferCartToCustomer} from '$lib/stores/cart-auth.svelte';
     import {setLocale} from '@/paraglide/runtime';
     import {browser} from '$app/environment';
     import '../app.css';
@@ -21,9 +22,15 @@
             }
         }
 
-        // Backend stores initialize independently — don't block if backend is unreachable
-        cartStore.initialize().catch(() => {});
-        customerStore.initialize().catch(() => {});
+        // Initialize both stores, then transfer cart if user is already authenticated
+        await Promise.all([
+            cartStore.initialize().catch(() => {}),
+            customerStore.initialize().catch(() => {}),
+        ]);
+
+        if (customerStore.isAuthenticated) {
+            transferCartToCustomer().catch(() => {});
+        }
     });
 </script>
 

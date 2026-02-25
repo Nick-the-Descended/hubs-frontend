@@ -1,6 +1,8 @@
 <script lang="ts">
     import { customerStore } from '$lib/stores/customer.svelte';
+    import { registerWithCart } from '$lib/stores/cart-auth.svelte';
     import { goto } from '$app/navigation';
+    import { page } from '$app/state';
 
     let email = $state('');
     let password = $state('');
@@ -8,6 +10,10 @@
     let lastName = $state('');
     let confirmPassword = $state('');
     let formError = $state('');
+
+    const redirectTo = $derived(
+        page.url.searchParams.get('redirect') || '/profile'
+    );
 
     async function handleRegister(e: Event) {
         e.preventDefault();
@@ -19,8 +25,8 @@
         }
 
         try {
-            await customerStore.registerLegacy(email, password, firstName, lastName);
-            goto('/auth/login');
+            await registerWithCart(email, password, firstName, lastName);
+            goto(redirectTo);
         } catch (err: any) {
             formError = err.message || 'Registration failed. Please try again.';
         }
