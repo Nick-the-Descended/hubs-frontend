@@ -127,7 +127,7 @@
                                             {#if index === 0}
                                                 <span class="font-semibold text-right w-full">ფასი</span>
                                             {/if}
-                                            <span class="font-medium uppercase">{((item.subtotal ?? 0) / 100).toFixed(2)} ₾</span>
+                                            <span class="font-medium uppercase">{(item.unit_price * item.quantity).toFixed(2)} ₾</span>
                                         </div>
                                     </div>
 
@@ -232,7 +232,7 @@
                                         <span class="w-5">x{item.quantity}</span>
                                         <span class="w-[199px]">{item.title}</span>
                                     </div>
-                                    <span>{((item.subtotal ?? 0) / 100).toFixed(2)} ₾</span>
+                                    <span>{(item.unit_price * item.quantity).toFixed(2)} ₾</span>
                                 </div>
                             {/each}
                         </div>

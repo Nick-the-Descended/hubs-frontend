@@ -58,7 +58,7 @@
             shippingOptions = (shipping_options ?? []).map((opt: any) => ({
                 id: opt.id,
                 name: opt.name,
-                amount: (opt.amount ?? 0) / 100,
+                amount: opt.amount ?? 0,
             }));
             if (shippingOptions.length > 0) {
                 selectedShippingOptionId = shippingOptions[0].id;
@@ -200,7 +200,7 @@
                 {#each cartItems as item (item.id)}
                     <div class="flex items-center justify-between py-2">
                         <span>{item.title} × {item.quantity}</span>
-                        <span>{((item.subtotal ?? 0) / 100).toFixed(2)} ₾</span>
+                        <span>{(item.unit_price * item.quantity).toFixed(2)} ₾</span>
                     </div>
                 {/each}
                 <div class="mt-4 border-t pt-4 flex justify-between font-semibold">

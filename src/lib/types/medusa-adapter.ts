@@ -30,13 +30,13 @@ export function medusaProductToCard(product: StoreProduct): ProductCardItem {
     const firstVariant = product.variants?.[0];  // already typed as StoreProductVariant
 
     const calculatedPrice = firstVariant?.calculated_price;
-    // calculated_amount is number | null — null means "not priced for this context"
-    const priceInCents = calculatedPrice?.calculated_amount ?? null;
-    const originalPriceInCents = calculatedPrice?.original_amount ?? priceInCents;
+    // calculated_amount is in currency units (not cents), null means "not priced for this context"
+    const priceAmount = calculatedPrice?.calculated_amount ?? null;
+    const originalPriceAmount = calculatedPrice?.original_amount ?? priceAmount;
 
-    const price = (priceInCents ?? 0) / 100;
-    const originalPrice = (originalPriceInCents ?? priceInCents ?? 0) / 100;
-    const hasDiscount = priceInCents !== null && originalPriceInCents !== null && originalPrice > price;
+    const price = priceAmount ?? 0;
+    const originalPrice = originalPriceAmount ?? priceAmount ?? 0;
+    const hasDiscount = priceAmount !== null && originalPriceAmount !== null && originalPrice > price;
 
     const discountPercentage = hasDiscount
         ? Math.round(((originalPrice - price) / originalPrice) * 100)
@@ -58,10 +58,10 @@ export function medusaProductToCard(product: StoreProduct): ProductCardItem {
 
     const variants = (product.variants ?? []).map((v) => {
         const variantCalcPrice = v.calculated_price;  // v is already StoreProductVariant, no cast needed
-        const vPriceInCents = variantCalcPrice?.calculated_amount ?? null;
-        const vOrigPriceInCents = variantCalcPrice?.original_amount ?? vPriceInCents;
-        const variantPrice = (vPriceInCents ?? 0) / 100;
-        const variantOriginalPrice = (vOrigPriceInCents ?? 0) / 100;
+        const vPrice = variantCalcPrice?.calculated_amount ?? null;
+        const vOrigPrice = variantCalcPrice?.original_amount ?? vPrice;
+        const variantPrice = vPrice ?? 0;
+        const variantOriginalPrice = vOrigPrice ?? 0;
 
         const options: Record<string, string> = {};
         for (const opt of (v.options ?? [])) {
@@ -117,11 +117,11 @@ export interface MedusaProductDetail {
 export function medusaProductToDetail(product: StoreProduct): MedusaProductDetail {
     const firstVariant = product.variants?.[0];
     const calcPrice = firstVariant?.calculated_price;
-    const priceInCents = calcPrice?.calculated_amount ?? null;
-    const originalPriceInCents = calcPrice?.original_amount ?? priceInCents;
-    const price = (priceInCents ?? 0) / 100;
-    const originalPrice = (originalPriceInCents ?? 0) / 100;
-    const hasDiscount = priceInCents !== null && originalPriceInCents !== null && originalPrice > price;
+    const priceAmount = calcPrice?.calculated_amount ?? null;
+    const originalPriceAmount = calcPrice?.original_amount ?? priceAmount;
+    const price = (priceAmount ?? 0) / 100;
+    const originalPrice = (originalPriceAmount ?? 0) / 100;
+    const hasDiscount = priceAmount !== null && originalPriceAmount !== null && originalPrice > price;
 
     const mainImageUrl = product.thumbnail ?? product.images?.[0]?.url ?? null;
 
@@ -132,10 +132,10 @@ export function medusaProductToDetail(product: StoreProduct): MedusaProductDetai
 
     const variants = (product.variants ?? []).map((v) => {
         const vCalc = v.calculated_price;
-        const vPriceInCents = vCalc?.calculated_amount ?? null;
-        const vOrigPriceInCents = vCalc?.original_amount ?? vPriceInCents;
-        const variantPrice = (vPriceInCents ?? 0) / 100;
-        const variantOriginalPrice = (vOrigPriceInCents ?? 0) / 100;
+        const vPrice = vCalc?.calculated_amount ?? null;
+        const vOrigPrice = vCalc?.original_amount ?? vPrice;
+        const variantPrice = vPrice ?? 0;
+        const variantOriginalPrice = vOrigPrice ?? 0;
         const vOptions: Record<string, string> = {};
         for (const vOpt of (v.options ?? [])) {
             if (!vOpt.option_id) continue;

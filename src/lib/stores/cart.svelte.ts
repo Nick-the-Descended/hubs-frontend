@@ -16,11 +16,11 @@ class CartStore {
     }
 
     get total() {
-        return this.cart?.total ? this.cart.total / 100 : 0;
+        return this.cart?.total ?? 0;
     }
 
     get subtotal() {
-        return this.cart?.subtotal ? this.cart.subtotal / 100 : 0;
+        return this.cart?.subtotal ?? 0;
     }
 
     async initialize() {

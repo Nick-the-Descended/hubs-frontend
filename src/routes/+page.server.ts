@@ -9,8 +9,9 @@ export const load: PageServerLoad = async () => {
             fields: '+variants.calculated_price,+variants.options,+options,+categories,+images',
         } as any);
 
+        const mapped = (products ?? []).map(medusaProductToCard);
         return {
-            products: (products ?? []).map(medusaProductToCard),
+            products: mapped,
         };
     } catch (error) {
         console.error('Error fetching home page products from Medusa:', error);
