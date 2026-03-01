@@ -23,6 +23,12 @@
         slug: string;
     };
 
+    type CollectionItem = {
+        id: string;
+        title: string;
+        handle: string;
+    };
+
     type BreadcrumbItem = {
         label: string;
         href?: string;
@@ -34,9 +40,25 @@
         categories: CategoryItem[];
         activeCategory: string | null;
         breadcrumbs: BreadcrumbItem[];
+        collections?: CollectionItem[];
+        activeCollection?: string | null;
     };
 
-    let {products, pagination, categories, activeCategory, breadcrumbs}: Props = $props();
+    let {products, pagination, categories, activeCategory, breadcrumbs, collections, activeCollection}: Props = $props();
+
+    function collectionUrl(handle: string): string {
+        const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+        params.set('collection', handle);
+        params.delete('page');
+        return `?${params.toString()}`;
+    }
+
+    function clearCollectionUrl(): string {
+        const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+        params.delete('collection');
+        params.delete('page');
+        return `?${params.toString()}`;
+    }
 
     let quickViewOpen = $state(false);
     let quickViewProduct = $state<ProductItem | null>(null);
@@ -122,6 +144,24 @@
             Sort
         </Button>
     </div>
+
+    <!-- Collection Filter Chips -->
+    {#if collections && collections.length > 0}
+        <div class="mb-4 flex flex-wrap gap-2">
+            <a
+                href={clearCollectionUrl()}
+                class="rounded-full border px-3 py-1 text-sm transition-colors {!activeCollection ? 'bg-primary text-primary-foreground border-primary' : 'border-gray-200 hover:bg-gray-100'}"
+            >All</a>
+            {#each collections as col (col.handle)}
+                <a
+                    href={collectionUrl(col.handle)}
+                    class="rounded-full border px-3 py-1 text-sm transition-colors {activeCollection === col.handle ? 'bg-primary text-primary-foreground border-primary' : 'border-gray-200 hover:bg-gray-100'}"
+                >
+                    {col.title}
+                </a>
+            {/each}
+        </div>
+    {/if}
 
     <!-- Main Content: Sidebar + Grid -->
     <div class="flex gap-8">

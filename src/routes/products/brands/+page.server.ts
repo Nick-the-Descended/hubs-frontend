@@ -34,7 +34,7 @@ export const load: PageServerLoad = async ({parent}) => {
 
 		// Get current locale from Paraglide and map to Strapi format
 		const locale = getLocale();
-		console.log('Brand Page - Locale:', locale);
+		// console.log('Brand Page - Locale:', locale);
 		const strapiLocale = mapParaglideLocaleToStrapi(locale);
 
 		// Execute the custom GraphQL query

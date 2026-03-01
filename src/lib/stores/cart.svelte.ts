@@ -34,7 +34,7 @@ class CartStore {
                     this.cart = cart;
                 } catch (err) {
                     // Cart doesn't exist or is invalid, create new one
-                    console.log('Cart not found, creating new cart');
+                    // console.log('Cart not found, creating new cart');
                     await this.create();
                 }
             } else {

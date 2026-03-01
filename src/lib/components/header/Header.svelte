@@ -45,7 +45,7 @@
     function handleSearch(event: Event) {
         event.preventDefault();
         // Implement search functionality
-        console.log('Searching for:', searchQuery);
+        // console.log('Searching for:', searchQuery);
     }
 
     function handleNavItemEnter(index: number) {

@@ -31,6 +31,18 @@ export const load: PageServerLoad = async ({ params, url, parent }) => {
             category_id: categoryId,
         };
 
+        // Fetch collections and resolve active collection filter
+        const { collections } = await sdk.store.collection.list({});
+        const collectionHandle = url.searchParams.get('collection');
+        let activeCollectionId: string | null = null;
+        if (collectionHandle) {
+            const matched = collections.find((c) => c.handle === collectionHandle);
+            activeCollectionId = matched?.id ?? null;
+        }
+        if (activeCollectionId) {
+            query.collection_id = activeCollectionId;
+        }
+
         const { products, count } = await sdk.store.product.list(query as any);
         const { product_categories } = await sdk.store.category.list({ limit: 100 } as any);
         const categories = (product_categories ?? []).map((c) => ({ name: c.name, slug: c.handle }));
@@ -42,6 +54,8 @@ export const load: PageServerLoad = async ({ params, url, parent }) => {
             categorySlug: params.subCategoryId,
             categoryName: activeCategoryName,
             navigationItems: header?.navigationItems ?? [],
+            collections: collections.map((c) => ({ id: c.id, title: c.title, handle: c.handle })),
+            activeCollection: collectionHandle,
         };
     } catch (error) {
         console.error('Error fetching subcategory products from Medusa:', error);
@@ -52,6 +66,8 @@ export const load: PageServerLoad = async ({ params, url, parent }) => {
             categorySlug: params.subCategoryId,
             categoryName: null,
             navigationItems: [],
+            collections: [],
+            activeCollection: null,
         };
     }
 };

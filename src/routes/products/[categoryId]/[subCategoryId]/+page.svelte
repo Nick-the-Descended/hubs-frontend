@@ -17,4 +17,6 @@
     categories={data.categories}
     activeCategory={data.categorySlug}
     {breadcrumbs}
+    collections={data.collections}
+    activeCollection={data.activeCollection}
 />
