@@ -9,8 +9,7 @@
     import type {PageData} from './$types';
 
     let {data}: { data: PageData } = $props();
-
-    const products = $derived(data.products || []);
+    $inspect(data)
 
     function handleAddToCart(product: ProductCardItem): void {
         if (product.firstVariantId) {
@@ -21,14 +20,16 @@
 
 <HeroSlider slides={data.slides}/>
 
+{#each data.featuredSections as section}
 <section class="py-12 max-w-full">
-    <h2 class="mx-12 mb-8 text-2xl font-semibold">Featured Products</h2>
+    <h2 class="mx-12 mb-8 text-2xl font-semibold">{section.title}</h2>
     <ProductCardSlider
-            {products}
+            products={section.products}
             onAddToCartClick={handleAddToCart}
-            baseUrl="/products/all/all"
+            baseUrl={section.seeMore}
     />
 </section>
+{/each}
 
 <section class="py-12 mx-auto">
     <h2 class="mx-12 mb-8 text-2xl font-semibold">სეზონური შეთავაზებები</h2>
@@ -51,14 +52,16 @@
     </div>
 </section>
 
+{#each data.discountSections as section}
 <section class="py-12 max-w-full">
-    <h2 class="mx-16 mb-8 text-2xl font-semibold">Featured Products</h2>
+    <h2 class="mx-12 mb-8 text-2xl font-semibold">{section.title}</h2>
     <ProductCardSlider
-            {products}
+            products={section.products}
             onAddToCartClick={handleAddToCart}
-            baseUrl="/products/all/all"
+            baseUrl={section.seeMore}
     />
 </section>
+{/each}
 
 <FanShop/>
 
