@@ -40,11 +40,16 @@ export const load: PageServerLoad = async ({ parent }) => {
     // Fetch products from Medusa (fan-shop category)
     let products: ProductCardItem[] = [];
     try {
-        const { product_categories } = await sdk.store.category.list({ handle: 'fan-shop', limit: 1 } as any);
+        const [{ product_categories }, { regions }] = await Promise.all([
+            sdk.store.category.list({ handle: 'fan-shop', limit: 1 } as any),
+            sdk.store.region.list(),
+        ]);
         const categoryId = product_categories?.[0]?.id ?? null;
+        const regionId = regions?.[0]?.id;
         if (categoryId) {
             const { products: medusaProducts } = await sdk.store.product.list({
                 limit: PAGE_SIZE,
+                region_id: regionId,
                 fields: '+variants.calculated_price,+variants.options,+options,+categories,+images',
                 category_id: categoryId,
             } as any);

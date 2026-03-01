@@ -10,8 +10,12 @@ export const load: PageServerLoad = async ({ params, parent }) => {
     await parent();
 
     try {
+        const { regions } = await sdk.store.region.list();
+        const regionId = regions?.[0]?.id;
+
         const { products } = await sdk.store.product.list({
             handle: params.itemId,
+            region_id: regionId,
             fields: '+variants.calculated_price,+variants.options,+options,+categories,+images',
         } as any);
 

@@ -20,9 +20,13 @@ export const load: PageServerLoad = async ({ params, url, parent }) => {
         if (!categoryId) throw error(404, `Subcategory "${params.subCategoryId}" not found`);
         const activeCategoryName = matched?.[0]?.name ?? null;
 
+        const { regions } = await sdk.store.region.list();
+        const regionId = regions?.[0]?.id;
+
         const query: Record<string, unknown> = {
             limit: PAGE_SIZE,
             offset,
+            region_id: regionId,
             fields: '+variants.calculated_price,+variants.options,+options,+categories,+images',
             category_id: categoryId,
         };
