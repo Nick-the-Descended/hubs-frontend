@@ -8,6 +8,8 @@
     import type { ProductCardItem } from '$lib/types/medusa-adapter';
     import type {PageData} from './$types';
 
+    type ProductSection = NonNullable<PageData['featuredSection']>;
+
     let {data}: { data: PageData } = $props();
     $inspect(data)
 
@@ -18,9 +20,7 @@
     }
 </script>
 
-<HeroSlider slides={data.slides}/>
-
-{#each data.featuredSections as section}
+{#snippet productSection(section: ProductSection)}
     {@const link = "/products/all?collection=" + section.collection}
     <section class="py-12 max-w-full">
         <span class="mx-12 mb-8 flex justify-between text-2xl font-semibold">
@@ -34,7 +34,11 @@
                 onAddToCartClick={handleAddToCart}
         />
     </section>
-{/each}
+{/snippet}
+
+<HeroSlider slides={data.slides}/>
+
+{#if data.featuredSection}{@render productSection(data.featuredSection)}{/if}
 
 <section class="py-12 mx-auto">
     <h2 class="mx-12 mb-8 text-2xl font-semibold">სეზონური შეთავაზებები</h2>
@@ -57,22 +61,7 @@
     </div>
 </section>
 
-{#each data.discountSections as section}
-    {@const link = "/products/all?collection=" + section.collection}
-    <span class="mx-12 mb-8 flex justify-between text-2xl font-semibold">
-            {section.title}
-        <a href={link}>
-                {section.seeMore}
-            </a>
-        </span>
-    <section class="py-12 max-w-full">
-        <h2 class="mx-12 mb-8 text-2xl font-semibold">{section.title}</h2>
-        <ProductCardSlider
-                products={section.products}
-                onAddToCartClick={handleAddToCart}
-        />
-    </section>
-{/each}
+{#if data.discountSection}{@render productSection(data.discountSection)}{/if}
 
 <FanShop/>
 

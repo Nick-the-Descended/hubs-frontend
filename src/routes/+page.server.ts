@@ -109,10 +109,10 @@ export const load: PageServerLoad = async () => {
     const featuredDef: SectionDef | null = raw?.featuredProducts ?? null;
     const discountDef: SectionDef | null = raw?.Discount ?? null;
 
-    const [featuredSections, discountSections] = await Promise.all([
-        featuredDef ? fetchSection(featuredDef).then((s) => [s]) : Promise.resolve([]),
-        discountDef ? fetchSection(discountDef).then((s) => [s]) : Promise.resolve([]),
+    const [featuredSection, discountSection] = await Promise.all([
+        featuredDef ? fetchSection(featuredDef) : Promise.resolve(null),
+        discountDef ? fetchSection(discountDef) : Promise.resolve(null),
     ]);
 
-    return { slides, featuredSections, discountSections };
+    return { slides, featuredSection, discountSection };
 };
