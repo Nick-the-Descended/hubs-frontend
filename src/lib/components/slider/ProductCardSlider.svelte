@@ -2,13 +2,13 @@
     import emblaCarouselSvelte from 'embla-carousel-svelte';
     import type {EmblaCarouselType} from 'embla-carousel';
     import * as ProductCard from '@/components/ui/product-card';
+    import QuickView from '@/components/quick-view/QuickView.svelte';
     import {cn} from "@/utils";
     import type {ProductCardItem} from '$lib/types/medusa-adapter';
 
     type ProductCardSliderProps = {
         products: ProductCardItem[];
         onFavoriteClick?: (productId: string) => void;
-        onQuickViewClick?: (productId: string) => void;
         onAddToCartClick?: (product: ProductCardItem) => void;
         slidesToShow?: number;
         tallCards?: boolean;
@@ -18,12 +18,19 @@
     let {
         products,
         onFavoriteClick,
-        onQuickViewClick,
         onAddToCartClick,
         slidesToShow = 4,
         tallCards = false,
         baseUrl = ''
     }: ProductCardSliderProps = $props();
+
+    let quickViewOpen = $state(false);
+    let quickViewProduct = $state<ProductCardItem | null>(null);
+
+    function openQuickView(product: ProductCardItem) {
+        quickViewProduct = product;
+        quickViewOpen = true;
+    }
 
     // slug is used to construct the link: baseUrl/slug (e.g., "/products/fan-shop/1")
     function getProductUrl(slug: string): string {
@@ -114,7 +121,7 @@
                         <!-- Action Buttons Overlay -->
                         <ProductCard.Actions
                                 onFavoriteClick={() => onFavoriteClick?.(product.id)}
-                                onQuickViewClick={() => onQuickViewClick?.(product.id)}
+                                onQuickViewClick={() => openQuickView(product)}
                                 onAddToCartClick={() => onAddToCartClick?.(product)}
                                 isFavorite={product.isFavourite ?? false}
                         />
@@ -129,12 +136,19 @@
                                 <ProductCard.Rating rating={product.averageRating}/>
                             {/if}
 
-                            <!-- Price and Add to Cart -->
-                            <ProductCard.Price
-                                    price={product.price}
-                                    discountedPrice={product.discountPrice ?? null}
-                                    currency="₾"
-                            />
+                            <!-- Discount Badge -->
+                            {#if product.discountPercentage}
+                                <ProductCard.DiscountBadge discountPercentage={product.discountPercentage}/>
+                            {/if}
+
+                            <!-- Price -->
+                            <div class="flex items-baseline gap-2">
+                                <ProductCard.Price
+                                        price={product.price}
+                                        discountedPrice={product.discountPrice ?? null}
+                                        currency="₾"
+                                />
+                            </div>
                         </ProductCard.Description>
                     </ProductCard.Root>
                 </div>
@@ -142,3 +156,5 @@
         </div>
     </div>
 </div>
+
+<QuickView bind:open={quickViewOpen} product={quickViewProduct} />

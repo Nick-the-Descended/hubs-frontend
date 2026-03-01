@@ -24,6 +24,7 @@ type SectionDef = {
 type ProductSection = {
     title: string;
     seeMore: string;
+    collection: string;
     products: ReturnType<typeof medusaProductToCard>[];
 };
 
@@ -95,11 +96,12 @@ export const load: PageServerLoad = async () => {
             return {
                 title: def.Title,
                 seeMore: def.SeeMore,
+                collection: def.Collection,
                 products: (products ?? []).map(medusaProductToCard),
             };
         } catch (error) {
             console.error(`Error fetching products for section "${def.Title}":`, error);
-            return { title: def.Title, seeMore: def.SeeMore, products: [] };
+            return { title: def.Title, seeMore: def.SeeMore, collection: def.Collection, products: [] };
         }
     };
 

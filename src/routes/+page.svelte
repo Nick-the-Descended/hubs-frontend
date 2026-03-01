@@ -21,14 +21,19 @@
 <HeroSlider slides={data.slides}/>
 
 {#each data.featuredSections as section}
-<section class="py-12 max-w-full">
-    <h2 class="mx-12 mb-8 text-2xl font-semibold">{section.title}</h2>
-    <ProductCardSlider
-            products={section.products}
-            onAddToCartClick={handleAddToCart}
-            baseUrl={section.seeMore}
-    />
-</section>
+    {@const link = "/products/all?collection=" + section.collection}
+    <section class="py-12 max-w-full">
+        <span class="mx-12 mb-8 flex justify-between text-2xl font-semibold">
+            {section.title}
+            <a href={link}>
+                {section.seeMore}
+            </a>
+        </span>
+        <ProductCardSlider
+                products={section.products}
+                onAddToCartClick={handleAddToCart}
+        />
+    </section>
 {/each}
 
 <section class="py-12 mx-auto">
@@ -53,14 +58,20 @@
 </section>
 
 {#each data.discountSections as section}
-<section class="py-12 max-w-full">
-    <h2 class="mx-12 mb-8 text-2xl font-semibold">{section.title}</h2>
-    <ProductCardSlider
-            products={section.products}
-            onAddToCartClick={handleAddToCart}
-            baseUrl={section.seeMore}
-    />
-</section>
+    {@const link = "/products/all?collection=" + section.collection}
+    <span class="mx-12 mb-8 flex justify-between text-2xl font-semibold">
+            {section.title}
+        <a href={link}>
+                {section.seeMore}
+            </a>
+        </span>
+    <section class="py-12 max-w-full">
+        <h2 class="mx-12 mb-8 text-2xl font-semibold">{section.title}</h2>
+        <ProductCardSlider
+                products={section.products}
+                onAddToCartClick={handleAddToCart}
+        />
+    </section>
 {/each}
 
 <FanShop/>
