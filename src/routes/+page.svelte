@@ -11,7 +11,6 @@
     type ProductSection = NonNullable<PageData['featuredSection']>;
 
     let {data}: { data: PageData } = $props();
-    $inspect(data)
 
     function handleAddToCart(product: ProductCardItem): void {
         if (product.firstVariantId) {
@@ -23,15 +22,18 @@
 {#snippet productSection(section: ProductSection)}
     {@const link = "/products/all?collection=" + section.collection}
     <section class="py-12 max-w-full">
-        <span class="mx-12 mb-8 flex justify-between text-2xl font-semibold">
-            {section.title}
-            <a href={link}>
+        <div class="mx-12 mb-8 flex justify-between">
+            <span class="text-2xl font-semibold">
+                {section.title}
+            </span>
+            <a href={link} class="text-md font-semibold underline underline-offset-8">
                 {section.seeMore}
             </a>
-        </span>
+        </div>
         <ProductCardSlider
                 products={section.products}
                 onAddToCartClick={handleAddToCart}
+                baseUrl={"/products/all/all"}
         />
     </section>
 {/snippet}
