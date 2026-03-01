@@ -39,7 +39,7 @@
     let canScrollPrev = $state(false);
     let canScrollNext = $state(false);
 
-    const options = {align: 'start' as const, loop: false, slidesToScroll: 3};
+    const options = {align: 'start' as const, loop: false, slidesToScroll: 1};
 
     function onInit(event: CustomEvent<EmblaCarouselType>) {
         emblaApi = event.detail;
