@@ -62,13 +62,13 @@
     <div class="absolute z-2 bottom-4 left-0 flex w-full justify-center gap-4">
         {#each images as _, index (index)}
             <button
-                    class="grid h-[30px] w-[30px] place-items-center"
+                    class="grid h-[30px] w-[30px] place-items-center cursor-pointer"
                     onclick={select(index)}
                     aria-label="Select slide"
             >
                 <span
                         class={cn(
-                        'h-[3px] w-full rounded-[.25rem] bg-black',
+                        'h-[3px] w-full rounded-lg bg-black',
                         selected === index
                             ? 'bg-black h-[5px]'
                             : '[background:linear-gradient(45deg,#FFF,#FFF)]'
