@@ -15,10 +15,22 @@ function buildSlideUrl(filters: SlideFilters): string {
     return `/products/all${query ? `?${query}` : ''}`;
 }
 
-type SeasonalOffer = {
-    Image: { url: string };
-    Collection: string;
+type SeasonalOffersSection = {
+    Title: string;
+    SeasonalOffersItem: { Image: { url: string }; Collection: string }[];
 };
+
+type FanShopData = {
+    Title: string;
+    Heading: string;
+    Description: string;
+    Collection: string;
+    SeeMore: string;
+    Image: { url: string };
+    FanShopPromotionItem: { Collection: string; Image: { url: string } }[];
+};
+
+type ServiceItem = { Title: string; Description: string; Image: { url: string } };
 
 type SectionDef = {
     Title: string;
@@ -37,41 +49,68 @@ export const load: PageServerLoad = async () => {
     const [homePageData, regionsResult] = await Promise.all([
         strapi
             .query<{
-                homePage: {
-                    slider: Array<{
-                        Image: Array<{ url: string }>;
+                homepage: {
+                    main_slider: Array<{
+                        Image: { url: string };
                         Collection?: string;
                     }>;
-                    featuredProducts: SectionDef;
-                    Discount: SectionDef;
-                    seasonalOffers: SeasonalOffer[];
+                    popular_products: SectionDef;
+                    discounted_products: SectionDef;
+                    seasonal_offers: SeasonalOffersSection;
+                    fanshop: FanShopData;
+                    services: ServiceItem[];
                 };
             }>(
                 `
                 query GetHomePage {
-                    homePage {
-                        slider {
+                    homepage {
+                        main_slider {
                             Image {
                                 url
                             }
                             Collection
                         }
-                        featuredProducts {
+                        popular_products {
                             Title
                             SeeMore
                             Collection
                         }
-                        Discount {
+                        discounted_products {
                             Title
                             SeeMore
                             Collection
                         }
-                        seasonalOffers {
+                        seasonal_offers {
+                            Title
+                            SeasonalOffersItem {
+                                Image {
+                                    url
+                                }
+                                Collection
+                            }
+                        }
+                        fanshop {
+                            Title
+                            Heading
+                            Description
+                            Collection
+                            SeeMore
                             Image {
                                 url
                             }
-                            Collection
+                            FanShopPromotionItem {
+                                Collection
+                                Image {
+                                    url
+                                }
+                            }
+                        }
+                        services {
                             Title
+                            Description
+                            Image {
+                                url
+                            }
                         }
                     }
                 }
@@ -86,10 +125,10 @@ export const load: PageServerLoad = async () => {
 
     const regionId = regionsResult.regions?.[0]?.id;
 
-    const slides = (homePageData?.homePage?.slider ?? [])
-        .filter((slide) => slide.Image?.[0])
+    const slides = (homePageData?.homepage?.main_slider ?? [])
+        .filter((slide) => slide.Image?.url)
         .map((slide) => ({
-            imageUrl: `${PUBLIC_STRAPI_URL}${slide.Image[0].url}`,
+            imageUrl: `${PUBLIC_STRAPI_URL}${slide.Image.url}`,
             href: buildSlideUrl({ collection: slide.Collection }),
         }));
 
@@ -118,19 +157,47 @@ export const load: PageServerLoad = async () => {
         }
     };
 
-    const raw = homePageData?.homePage;
-    const featuredDef: SectionDef | null = raw?.featuredProducts ?? null;
-    const discountDef: SectionDef | null = raw?.Discount ?? null;
+    const raw = homePageData?.homepage;
+    const featuredDef: SectionDef | null = raw?.popular_products ?? null;
+    const discountRaw = raw?.discounted_products;
+    const discountDef: SectionDef | null = discountRaw
+        ? { Title: discountRaw.Title, SeeMore: discountRaw.SeeMore, Collection: discountRaw.Collection }
+        : null;
 
-    const [featuredSection, discountSection] = await Promise.all([
+    const fanshopRaw = raw?.fanshop ?? null;
+
+    const fetchFanShopProducts = async (): Promise<ReturnType<typeof medusaProductToCard>[]> => {
+        if (!fanshopRaw?.Collection) return [];
+        try {
+            const { collections } = await sdk.store.collection.list({ handle: fanshopRaw.Collection } as any);
+            const collectionId = collections?.[0]?.id;
+            const query: Record<string, unknown> = {
+                limit: 4,
+                region_id: regionId,
+                fields: '+variants.calculated_price,+variants.options,+options,+categories,+images',
+            };
+            if (collectionId) query.collection_id = [collectionId];
+            const { products } = await sdk.store.product.list(query as any);
+            return (products ?? []).map(medusaProductToCard);
+        } catch (error) {
+            console.error('Error fetching fanshop products:', error);
+            return [];
+        }
+    };
+
+    const [featuredSection, discountSection, fanshopProducts] = await Promise.all([
         featuredDef ? fetchSection(featuredDef) : Promise.resolve(null),
         discountDef ? fetchSection(discountDef) : Promise.resolve(null),
+        fetchFanShopProducts(),
     ]);
 
-    const seasonalOffers = (homePageData?.homePage?.seasonalOffers ?? []).map((offer) => ({
-        imageUrl: `${PUBLIC_STRAPI_URL}${offer.Image.url}`,
-        href: `/products/all?collection=${offer.Collection}`,
+    const seasonalOffers = (raw?.seasonal_offers?.SeasonalOffersItem ?? []).map((item) => ({
+        imageUrl: `${PUBLIC_STRAPI_URL}${item.Image.url}`,
+        href: `/products/all?collection=${item.Collection}`,
     }));
 
-    return { slides, featuredSection, discountSection, seasonalOffers };
+    const fanshop = fanshopRaw ? { ...fanshopRaw, products: fanshopProducts } : null;
+    const services = raw?.services ?? [];
+
+    return { slides, featuredSection, discountSection, seasonalOffers, fanshop, services };
 };

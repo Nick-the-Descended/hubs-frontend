@@ -11,6 +11,7 @@
     type ProductSection = NonNullable<PageData['featuredSection']>;
 
     let {data}: { data: PageData } = $props();
+    $inspect(data)
 
     function handleAddToCart(product: ProductCardItem): void {
         if (product.firstVariantId) {
@@ -57,33 +58,8 @@
 
 {#if data.discountSection}{@render productSection(data.discountSection)}{/if}
 
-<FanShop/>
-
-<section class="py-12 px-16 w-full grid grid-cols-2 gap-6">
-    <div
-            class="flex flex-col items-center justify-end h-[700px] w-full bg-no-repeat bg-cover bg-center rounded-xl p-6"
-            style="background-image: linear-gradient(to top, #000a, #0000 50%), url(/more/left.png);"
-    >
-        <span class="text-white text-2xl font-semibold text-center px-2 py-6">
-            სპორტული ფეხსაცმელი
-        </span>
-        <Button>
-            ყველას ნახვა
-        </Button>
-    </div>
-    <div
-            class="flex flex-col items-center justify-end h-[700px] w-full bg-no-repeat bg-cover bg-center rounded-xl p-6"
-            style="background-image: linear-gradient(to top, #000a, #0000 50%), url(/more/left.png);"
-    >
-        <span class="text-white text-2xl font-semibold text-center px-2 py-6">
-            სპორტული ფეხსაცმელი
-        </span>
-        <Button>
-            ყველას ნახვა
-        </Button>
-    </div>
-</section>
+<FanShop fanshop={data.fanshop}/>
 
 <section class="py-12 max-w-full">
-    <Features/>
+    <Features services={data.services}/>
 </section>

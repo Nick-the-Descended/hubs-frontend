@@ -1,39 +1,20 @@
 <script lang="ts">
-	// Features component showcasing key benefits
-	interface Feature {
-		icon: string;
-		title: string;
-		description: string;
-	}
+	import { PUBLIC_STRAPI_URL } from '$env/static/public';
 
-	const features: Feature[] = [
-		{
-			icon: '/icons/truck-delivery.svg',
-			title: 'სწრაფი მიტანის სერვისი',
-			description:
-				'შეძენილ ნივთს სწრაფად მოგაწვდით თქვენს მისამართზე მთელი მსოფლიოს მასშტაბით'
-		},
-		{
-			icon: '/icons/shield-check.svg',
-			title: 'გარანტირებული ხარისხი',
-			description: 'ჩვენთან შეგიძლიათ შეიძინოთ მხოლოდ წამყვანი ბრენდების ორიგინალი პროდუქცია'
-		},
-		{
-			icon: '/icons/star-outline.svg',
-			title: 'საუკეთესო მომსახურება',
-			description: 'შეგიძლიათ ნებისმიერ დროს გაცვალოთ ან დააბრუნოთ ნივთი'
-		}
-	];
+	type ServiceItem = { Title: string; Description: string; Image: { url: string } };
+
+	let { services }: { services: ServiceItem[] } = $props();
 </script>
 
+{#if services.length}
 <section class="w-full px-20 py-0">
 	<div class="grid grid-cols-3 gap-8">
-		{#each features as feature}
+		{#each services as service}
 			<div class="flex flex-col items-center justify-center p-6 rounded-2xl overflow-hidden">
 				<div class="flex flex-col items-center justify-center gap-5 w-full">
 					<!-- Icon -->
 					<div class="w-10 h-10 flex-shrink-0">
-						<img src={feature.icon} alt="" class="w-full h-full object-contain" />
+						<img src="{PUBLIC_STRAPI_URL}{service.Image.url}" alt="" class="w-full h-full object-contain" />
 					</div>
 
 					<!-- Text Content -->
@@ -41,12 +22,12 @@
 						<h3
 							class="font-['Inter','Noto_Sans_Georgian',sans-serif] font-medium text-base leading-6 uppercase text-black"
 						>
-							{feature.title}
+							{service.Title}
 						</h3>
 						<p
 							class="font-['Inter','Noto_Sans_Georgian',sans-serif] font-normal text-xs leading-normal text-black"
 						>
-							{feature.description}
+							{service.Description}
 						</p>
 					</div>
 				</div>
@@ -54,3 +35,4 @@
 		{/each}
 	</div>
 </section>
+{/if}
