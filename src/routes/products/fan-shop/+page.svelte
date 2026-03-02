@@ -4,6 +4,7 @@
     import * as Breadcrumb from '@/components/ui/breadcrumb';
     import ProductCardSlider from '@/components/slider/ProductCardSlider.svelte';
     import {cartStore} from '$lib/stores/cart.svelte';
+    import {favoritesStore} from '$lib/stores/favorites.svelte';
 
     let {data}: { data: PageData } = $props();
     $inspect(data)
@@ -229,7 +230,7 @@
                 <ProductCardSlider
                         products={data.products}
                         baseUrl="/products/fan-shop"
-                        onFavoriteClick={(productId) => console.log('Favorite:', productId)}
+                        onFavoriteClick={(productId) => favoritesStore.toggle(productId)}
                         onQuickViewClick={(productId) => console.log('Quick view:', productId)}
                         onAddToCartClick={(product) => {
                             if (product.firstVariantId) {

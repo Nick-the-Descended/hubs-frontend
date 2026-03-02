@@ -61,7 +61,7 @@
 
     function getImageUrl(image: StrapiImage | null): string {
         if (!image?.url) return '/placeholder-image.png';
-        return `${PUBLIC_STRAPI_URL}${image.url}`;
+        return `${image.url}`;
     }
 
     function getProductUrl(): string {

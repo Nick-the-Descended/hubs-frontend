@@ -3,6 +3,7 @@
     import * as ProductCard from "@/components/ui/product-card";
     import {PUBLIC_STRAPI_URL} from '$env/static/public';
     import type {ProductCardItem} from '$lib/types/medusa-adapter';
+    import {favoritesStore} from '$lib/stores/favorites.svelte';
 
     type FanShopData = {
         Title: string;
@@ -44,6 +45,10 @@
                                     class="grow"
                                     imageUrl={product.mainImage?.url ?? '/placeholder-image.png'}
                                     imageAlt={product.name}
+                            />
+                            <ProductCard.Actions
+                                    isFavorite={favoritesStore.isFavorite(product.id)}
+                                    onFavoriteClick={() => favoritesStore.toggle(product.id)}
                             />
                             <ProductCard.Description>
                                 <ProductCard.Title name={product.name}/>

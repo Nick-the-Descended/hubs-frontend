@@ -2,6 +2,7 @@
     import {onMount} from 'svelte';
     import {cartStore} from '$lib/stores/cart.svelte';
     import {customerStore} from '$lib/stores/customer.svelte';
+    import {favoritesStore} from '$lib/stores/favorites.svelte';
     import {transferCartToCustomer} from '$lib/stores/cart-auth.svelte';
     import {setLocale} from '@/paraglide/runtime';
     import {browser} from '$app/environment';
@@ -30,6 +31,7 @@
 
         if (customerStore.isAuthenticated) {
             transferCartToCustomer().catch(() => {});
+            favoritesStore.initialize().catch(() => {});
         }
     });
 </script>

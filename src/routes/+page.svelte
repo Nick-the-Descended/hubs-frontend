@@ -5,6 +5,7 @@
     import {Button} from "@/components/ui/button";
     import Features from "@/components/home/features/Features.svelte";
     import { cartStore } from '$lib/stores/cart.svelte';
+    import { favoritesStore } from '$lib/stores/favorites.svelte';
     import type { ProductCardItem } from '$lib/types/medusa-adapter';
     import type {PageData} from './$types';
 
@@ -34,6 +35,7 @@
         <ProductCardSlider
                 products={section.products}
                 onAddToCartClick={handleAddToCart}
+                onFavoriteClick={(productId) => favoritesStore.toggle(productId)}
                 baseUrl={"/products/all/all"}
         />
     </section>

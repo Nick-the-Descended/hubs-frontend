@@ -5,6 +5,7 @@
     import {PUBLIC_STRAPI_URL} from '$env/static/public';
     import {ChevronLeft, ChevronRight, ArrowUpDown} from '@lucide/svelte';
     import {cartStore} from '$lib/stores/cart.svelte';
+    import {favoritesStore} from '$lib/stores/favorites.svelte';
     import QuickView from '@/components/quick-view/QuickView.svelte';
 
     import type { ProductCardItem } from '$lib/types/medusa-adapter';
@@ -254,7 +255,8 @@
                             />
 
                             <ProductCard.Actions
-                                    isFavorite={product.isFavourite ?? false}
+                                    isFavorite={favoritesStore.isFavorite(product.id)}
+                                    onFavoriteClick={() => favoritesStore.toggle(product.id)}
                                     onQuickViewClick={() => openQuickView(product)}
                                     onAddToCartClick={() => {
                                         if (product.firstVariantId) {

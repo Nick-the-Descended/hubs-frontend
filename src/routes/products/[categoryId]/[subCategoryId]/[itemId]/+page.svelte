@@ -1,6 +1,7 @@
 <script lang="ts">
     import { cartStore } from '$lib/stores/cart.svelte';
     import { customerStore } from '$lib/stores/customer.svelte';
+    import { favoritesStore } from '$lib/stores/favorites.svelte';
     import { sdk } from '$lib/sdk';
     import type { PageData } from './$types';
     import type { MedusaProductDetail } from './+page.server';
@@ -290,6 +291,25 @@
                     >
                         {addedToCart ? 'Added!' : addingToCart ? 'Adding...' : 'Add to cart'}
                     </button>
+                    {#if customerStore.isAuthenticated && product}
+                        <button
+                            class="flex items-center justify-center w-14 h-14 rounded-lg border transition-colors disabled:opacity-50 {favoritesStore.isFavorite(product.id) ? 'border-red-500 bg-red-50 text-red-500 hover:bg-red-100' : 'border-gray-300 text-gray-500 hover:border-gray-500 hover:text-gray-700'}"
+                            onclick={() => product && favoritesStore.toggle(product.id)}
+                            disabled={favoritesStore.loading}
+                            aria-label={favoritesStore.isFavorite(product.id) ? 'Remove from favorites' : 'Add to favorites'}
+                        >
+                            {#if favoritesStore.loading}
+                                <svg class="h-5 w-5 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                </svg>
+                            {:else}
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={favoritesStore.isFavorite(product.id) ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            {/if}
+                        </button>
+                    {/if}
                 </div>
             </div>
         </div>
