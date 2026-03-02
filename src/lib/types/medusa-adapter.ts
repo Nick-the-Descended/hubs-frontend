@@ -179,3 +179,13 @@ export function medusaPagination(count: number, page: number, pageSize: number):
         total: count,
     };
 }
+
+export interface StoreProductReview {
+    id: string;
+    title: string | null;
+    rating: number;
+    content: string;
+    first_name: string;
+    last_name: string;
+    created_at: string;
+}

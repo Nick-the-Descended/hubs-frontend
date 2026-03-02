@@ -1,7 +1,7 @@
 import { sdk } from '$lib/sdk';
 import { error } from '@sveltejs/kit';
 import type { StoreProduct } from '@medusajs/types';
-import { medusaProductToDetail, type MedusaProductDetail } from '$lib/types/medusa-adapter';
+import { medusaProductToDetail, type MedusaProductDetail, type StoreProductReview } from '$lib/types/medusa-adapter';
 import type { PageServerLoad } from './$types';
 
 export type { MedusaProductDetail };
@@ -22,14 +22,31 @@ export const load: PageServerLoad = async ({ params, parent }) => {
         const product = products?.[0] as StoreProduct | undefined;
         if (!product) throw error(404, 'Product not found');
 
+        let reviews: StoreProductReview[] = [];
+        let averageRating: number | null = null;
+
+        try {
+            const result = await sdk.client.fetch<{
+                reviews: StoreProductReview[];
+                average_rating: number;
+            }>(`/store/products/${product.id}/reviews`, {
+                query: { limit: 20, offset: 0, order: '-created_at' },
+            });
+            reviews = result.reviews ?? [];
+            averageRating = result.average_rating ?? null;
+        } catch {
+            // Reviews module not installed on backend — degrade gracefully
+        }
+
         return {
-            product: medusaProductToDetail(product),
+            product: { ...medusaProductToDetail(product), averageRating },
+            reviews,
             categoryId: params.categoryId,
             subCategoryId: params.subCategoryId,
         };
     } catch (err: any) {
         if (err.status === 404) throw err;
         console.error('Error fetching product from Medusa:', err);
-        return { product: null, categoryId: params.categoryId, subCategoryId: params.subCategoryId };
+        return { product: null, reviews: [], categoryId: params.categoryId, subCategoryId: params.subCategoryId };
     }
 };

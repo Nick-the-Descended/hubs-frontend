@@ -1,7 +1,11 @@
 <script lang="ts">
     import { cartStore } from '$lib/stores/cart.svelte';
+    import { customerStore } from '$lib/stores/customer.svelte';
+    import { sdk } from '$lib/sdk';
     import type { PageData } from './$types';
     import type { MedusaProductDetail } from './+page.server';
+    import type { StoreProductReview } from '$lib/types/medusa-adapter';
+    import ProductCardRating from '@/components/ui/product-card/product-card-rating.svelte';
 
     let { data }: { data: PageData } = $props();
 
@@ -10,6 +14,24 @@
     let selectedImageIndex = $state(0);
     let selectedOptions = $state<Record<string, string>>({});
     let activeTab = $state<'overview' | 'reviews'>('overview');
+
+    // Reviews state
+    let reviews = $state<StoreProductReview[]>((data as any).reviews ?? []);
+    let reviewAvgRating = $state<number | null>(data.product?.averageRating ?? null);
+    let reviewRating = $state(0);
+    let reviewHoverRating = $state(0);
+    let reviewTitle = $state('');
+    let reviewContent = $state('');
+    let reviewFirstName = $state('');
+    let reviewLastName = $state('');
+    let submittingReview = $state(false);
+    let reviewError = $state('');
+    let reviewSuccess = $state(false);
+
+    $effect(() => {
+        reviewFirstName = customerStore.customer?.first_name ?? '';
+        reviewLastName = customerStore.customer?.last_name ?? '';
+    });
 
     // Reset selection state when navigating between products (SvelteKit reuses the component)
     $effect(() => {
@@ -52,9 +74,41 @@
     const sizeOption = $derived(product?.options?.find((o) => o.title === 'Size') ?? null);
     const colorOption = $derived(product?.options?.find((o) => o.title === 'Color') ?? null);
 
-    const filledStars = $derived(Math.floor(product?.averageRating ?? 0));
-    const hasHalfStar = $derived((product?.averageRating ?? 0) % 1 >= 0.5);
+    const filledStars = $derived(Math.floor(reviewAvgRating ?? 0));
+    const hasHalfStar = $derived((reviewAvgRating ?? 0) % 1 >= 0.5);
     const emptyStars = $derived(5 - filledStars - (hasHalfStar ? 1 : 0));
+
+    async function submitReview(e: Event) {
+        e.preventDefault();
+        if (!product || reviewRating === 0) return;
+        submittingReview = true;
+        reviewError = '';
+        reviewSuccess = false;
+        try {
+            const result = await sdk.client.fetch<{ review: StoreProductReview }>('/store/reviews', {
+                method: 'POST',
+                body: {
+                    product_id: product.id,
+                    rating: reviewRating,
+                    title: reviewTitle || undefined,
+                    content: reviewContent,
+                    first_name: reviewFirstName,
+                    last_name: reviewLastName,
+                },
+            });
+            reviews = [result.review, ...reviews];
+            const total = reviews.reduce((sum, r) => sum + r.rating, 0);
+            reviewAvgRating = parseFloat((total / reviews.length).toFixed(2));
+            reviewRating = 0;
+            reviewTitle = '';
+            reviewContent = '';
+            reviewSuccess = true;
+        } catch (err: any) {
+            reviewError = err.message || 'Failed to submit review. Please try again.';
+        } finally {
+            submittingReview = false;
+        }
+    }
 
     async function addToCart() {
         if (!selectedVariant) return;
@@ -118,7 +172,7 @@
             <!-- Right column: Product Info -->
             <div class="flex flex-col gap-5">
                 <!-- Rating -->
-                {#if (product.averageRating ?? 0) > 0}
+                {#if (reviewAvgRating ?? 0) > 0}
                     <div class="flex items-center gap-3">
                         <div class="flex items-center gap-1">
                             {#each Array.from({length: filledStars}) as _, i (i)}
@@ -263,7 +317,134 @@
                     {#if activeTab === 'overview'}
                         <p class="text-gray-700 leading-relaxed">{product.description || 'No description available.'}</p>
                     {:else if activeTab === 'reviews'}
-                        <p class="text-gray-500">No reviews yet.</p>
+                        <div class="flex flex-col gap-6">
+                            <!-- Review list -->
+                            {#if reviews.length === 0}
+                                <p class="text-gray-500">No reviews yet. Be the first to review this product!</p>
+                            {:else}
+                                <div class="flex flex-col gap-4">
+                                    {#each reviews as review (review.id)}
+                                        <div class="border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <ProductCardRating rating={review.rating} />
+                                                <span class="text-xs text-gray-400">
+                                                    {new Date(review.created_at).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                            {#if review.title}
+                                                <p class="font-semibold text-gray-900 text-sm">{review.title}</p>
+                                            {/if}
+                                            <p class="text-gray-700 text-sm leading-relaxed">{review.content}</p>
+                                            <p class="text-xs text-gray-400">{review.first_name} {review.last_name}</p>
+                                        </div>
+                                    {/each}
+                                </div>
+                            {/if}
+
+                            <!-- Review form -->
+                            {#if customerStore.isAuthenticated}
+                                <div class="border-t border-gray-200 pt-6">
+                                    <h3 class="font-semibold text-gray-900 mb-4">Write a Review</h3>
+                                    {#if reviewSuccess}
+                                        <div class="mb-4 rounded border border-green-400 bg-green-50 px-4 py-3 text-green-700 text-sm">
+                                            Review submitted! It will appear once approved.
+                                        </div>
+                                    {/if}
+                                    {#if reviewError}
+                                        <div class="mb-4 rounded border border-red-400 bg-red-50 px-4 py-3 text-red-700 text-sm">
+                                            {reviewError}
+                                        </div>
+                                    {/if}
+                                    <form onsubmit={submitReview} class="flex flex-col gap-4">
+                                        <!-- Star picker -->
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700 mb-2">Rating <span class="text-red-500">*</span></p>
+                                            <div class="flex items-center gap-1">
+                                                {#each [1, 2, 3, 4, 5] as star (star)}
+                                                    <button
+                                                        type="button"
+                                                        class="p-0.5 transition-transform hover:scale-110"
+                                                        onmouseenter={() => reviewHoverRating = star}
+                                                        onmouseleave={() => reviewHoverRating = 0}
+                                                        onclick={() => reviewRating = star}
+                                                    >
+                                                        {#if star <= (reviewHoverRating || reviewRating)}
+                                                            <svg class="h-7 w-7 fill-orange-400 text-orange-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                                            </svg>
+                                                        {:else}
+                                                            <svg class="h-7 w-7 text-orange-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                                            </svg>
+                                                        {/if}
+                                                    </button>
+                                                {/each}
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <div>
+                                                <label for="review-first-name" class="mb-1 block text-sm font-medium text-gray-700">First Name <span class="text-red-500">*</span></label>
+                                                <input
+                                                    id="review-first-name"
+                                                    type="text"
+                                                    bind:value={reviewFirstName}
+                                                    required
+                                                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-black"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label for="review-last-name" class="mb-1 block text-sm font-medium text-gray-700">Last Name <span class="text-red-500">*</span></label>
+                                                <input
+                                                    id="review-last-name"
+                                                    type="text"
+                                                    bind:value={reviewLastName}
+                                                    required
+                                                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-black"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label for="review-title" class="mb-1 block text-sm font-medium text-gray-700">Title</label>
+                                            <input
+                                                id="review-title"
+                                                type="text"
+                                                bind:value={reviewTitle}
+                                                placeholder="Summarize your experience"
+                                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-black"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label for="review-content" class="mb-1 block text-sm font-medium text-gray-700">Review <span class="text-red-500">*</span></label>
+                                            <textarea
+                                                id="review-content"
+                                                bind:value={reviewContent}
+                                                required
+                                                rows={4}
+                                                placeholder="Share your thoughts about this product"
+                                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-black resize-none"
+                                            ></textarea>
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            disabled={submittingReview || reviewRating === 0}
+                                            class="self-start bg-black text-white font-semibold py-2.5 px-6 rounded-lg hover:bg-gray-800 transition-colors text-sm disabled:opacity-50"
+                                        >
+                                            {submittingReview ? 'Submitting...' : 'Submit Review'}
+                                        </button>
+                                    </form>
+                                </div>
+                            {:else}
+                                <div class="border-t border-gray-200 pt-6">
+                                    <p class="text-sm text-gray-500">
+                                        <a href="/auth/login" class="font-medium text-black hover:underline">Log in</a> to leave a review.
+                                    </p>
+                                </div>
+                            {/if}
+                        </div>
                     {/if}
                 </div>
             </div>
