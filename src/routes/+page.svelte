@@ -42,26 +42,18 @@
 
 {#if data.featuredSection}{@render productSection(data.featuredSection)}{/if}
 
+{#if data.seasonalOffers.length === 3}
 <section class="py-12 mx-auto">
     <h2 class="mx-12 mb-8 text-2xl font-semibold">სეზონური შეთავაზებები</h2>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:rounded-xl mx-12 overflow-clip">
-        <a
-                href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                class="relative flex flex-col justify-end items-center max-h-[75svh] bg-gray-100 overflow-hidden bg-cover bg-center"
-                style="background-image: linear-gradient(to top, #000a, #0000 50%), url(/seasonal/ball.png);"
-        >
-            <span class="text-white text-2xl font-semibold text-center px-2 py-6">
-                შემოდგომის ფასდაკლებები
-            </span>
-        </a>
-        <div class="relative max-h-[75svh] bg-gray-100 overflow-hidden">
-            <img src="/seasonal/ball.png" alt="ball" class="h-full w-full object-cover">
-        </div>
-        <div class="relative max-h-[75svh] bg-gray-100 overflow-hidden">
-            <img src="/seasonal/ball.png" alt="ball" class="h-full w-full object-cover">
-        </div>
+        {#each data.seasonalOffers as item}
+            <a href={item.href} class="relative max-h-[75svh] overflow-hidden">
+                <img src={item.imageUrl} alt="seasonal offer" class="h-full w-full object-cover">
+            </a>
+        {/each}
     </div>
 </section>
+{/if}
 
 {#if data.discountSection}{@render productSection(data.discountSection)}{/if}
 

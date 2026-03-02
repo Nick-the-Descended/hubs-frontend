@@ -15,6 +15,11 @@ function buildSlideUrl(filters: SlideFilters): string {
     return `/products/all${query ? `?${query}` : ''}`;
 }
 
+type SeasonalOffer = {
+    Image: { url: string };
+    Collection: string;
+};
+
 type SectionDef = {
     Title: string;
     SeeMore: string;
@@ -39,6 +44,7 @@ export const load: PageServerLoad = async () => {
                     }>;
                     featuredProducts: SectionDef;
                     Discount: SectionDef;
+                    seasonalOffers: SeasonalOffer[];
                 };
             }>(
                 `
@@ -59,6 +65,13 @@ export const load: PageServerLoad = async () => {
                             Title
                             SeeMore
                             Collection
+                        }
+                        seasonalOffers {
+                            Image {
+                                url
+                            }
+                            Collection
+                            Title
                         }
                     }
                 }
@@ -114,5 +127,10 @@ export const load: PageServerLoad = async () => {
         discountDef ? fetchSection(discountDef) : Promise.resolve(null),
     ]);
 
-    return { slides, featuredSection, discountSection };
+    const seasonalOffers = (homePageData?.homePage?.seasonalOffers ?? []).map((offer) => ({
+        imageUrl: `${PUBLIC_STRAPI_URL}${offer.Image.url}`,
+        href: `/products/all?collection=${offer.Collection}`,
+    }));
+
+    return { slides, featuredSection, discountSection, seasonalOffers };
 };
