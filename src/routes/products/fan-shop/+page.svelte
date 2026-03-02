@@ -3,10 +3,10 @@
     import {PUBLIC_STRAPI_URL} from '$env/static/public';
     import * as Breadcrumb from '@/components/ui/breadcrumb';
     import ProductCardSlider from '@/components/slider/ProductCardSlider.svelte';
-    import {Button} from "@/components/ui/button";
     import {cartStore} from '$lib/stores/cart.svelte';
 
     let {data}: { data: PageData } = $props();
+    $inspect(data)
 
     const fanShopCms = $derived(data.fanShopCms);
 
@@ -80,7 +80,7 @@
         <div class="mx-auto mb-8">
             <div class="flex gap-6">
                 <!-- Left Column: Breadcrumb + Navigation -->
-                <aside class="w-fi flex-shrink-0 basis-1 grow">
+                <aside class="w-fit shrink-0 basis-1 grow">
                     <div class="space-y-4">
                         <!-- Breadcrumb -->
                         <Breadcrumb.Root>
@@ -100,10 +100,10 @@
                         </Breadcrumb.Root>
 
                         <!-- Navigation -->
-                        <nav class="sticky top-4 rounded-lg bg-white shadow-sm" bind:this={sidebarElement}>
+                        <nav class="sticky top-4 rounded-lg bg-white max-w-max shadow-sm" bind:this={sidebarElement}>
                             <ul>
                                 {#each navigationItems as item, index (index)}
-                                    <li class="relative">
+                                    <li class="relative pr-4">
                                         <a
                                                 href={`/products${item.href}`}
                                                 class="group flex items-center gap-3 px-6 py-6 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
@@ -114,10 +114,14 @@
                                                 <img
                                                         src={`${PUBLIC_STRAPI_URL}${item.icon.url}`}
                                                         alt={item.label}
-                                                        class="h-5 w-5 object-contain flex-shrink-0"
+                                                        class="h-5 w-5 object-contain shrink-0"
                                                 />
                                             {/if}
-                                            <span>{item.label}</span>
+                                            <span class="mr-auto">{item.label}</span>
+                                            <svg class="ml-16 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M9 5l7 7-7 7"/>
+                                            </svg>
                                         </a>
                                     </li>
                                 {/each}
@@ -135,7 +139,7 @@
                             class="fixed z-50 rounded-lg bg-white shadow-xl animate-fade-in border border-gray-200 w-max"
                             onmouseenter={handleOverlayEnter}
                             onmouseleave={handleOverlayLeave}
-                            style="left: {overlayPosition.left}px; top: {overlayPosition.top}px; min-height: {overlayPosition.height}px; overflow-y: auto;"
+                            style="left: {overlayPosition.left}px; top: {overlayPosition.top}px; overflow-y: auto;"
                     >
                         <div class="p-6">
                             <img
@@ -192,35 +196,14 @@
                 {/if}
 
                 <!-- Banner Section (Strapi CMS image) -->
-                {#if fanShopCms.banner}
-                    {#if fanShopCms.banner.buttonText}
-                        <!-- Banner with button -->
-                        <div class="relative flex-1 basis-5 overflow-hidden rounded-lg grow">
-                            <img
-                                    src={PUBLIC_STRAPI_URL + fanShopCms.banner.Image.url}
-                                    alt={fanShopCms.banner.Image.name}
-                                    width={fanShopCms.banner.Image.width}
-                                    height={fanShopCms.banner.Image.height}
-                                    class="h-full w-full object-cover"
-                            />
-                            <div class="absolute inset-0 flex items-end justify-center pb-8">
-                                <Button variant="banner" size="banner" href="/products/fan-shop/all">
-                                    {fanShopCms.banner.buttonText}
-                                </Button>
-                            </div>
-                        </div>
-                    {:else}
-                        <!-- Clickable banner without button -->
-                        <a href="/products/fan-shop/all" class="relative flex-1 basis-5 overflow-hidden rounded-lg grow block cursor-pointer transition-opacity hover:opacity-90">
-                            <img
-                                    src={PUBLIC_STRAPI_URL + fanShopCms.banner.Image.url}
-                                    alt={fanShopCms.banner.Image.name}
-                                    width={fanShopCms.banner.Image.width}
-                                    height={fanShopCms.banner.Image.height}
-                                    class="h-full w-full object-cover"
-                            />
-                        </a>
-                    {/if}
+                {#if fanShopCms.mainContent}
+                    <a href="/products/fan-shop/all" class="relative flex-1 basis-5 overflow-hidden rounded-lg grow block cursor-pointer transition-opacity hover:opacity-90">
+                        <img
+                                src={PUBLIC_STRAPI_URL + fanShopCms.mainContent.Image.url}
+                                alt="Fan Shop Banner"
+                                class="h-full w-full object-cover"
+                        />
+                    </a>
                 {/if}
             </div>
         </div>
@@ -229,13 +212,13 @@
         {#if data.products.length > 0}
             <div class="mb-8">
                 <div class="container mx-auto px-4 flex w-full items-center justify-between">
-                    <h2 class="mb-6 text-2xl font-bold text-gray-900">{fanShopCms.productListTitle}</h2>
+                    <h2 class="mb-6 text-2xl font-bold text-gray-900">{fanShopCms.mainContent?.Title}</h2>
                     <div class="text-center">
                         <a
                                 href="/products/fan-shop/all"
                                 class="inline-flex items-center gap-2 rounded-lg py-3 text-sm font-semibold"
                         >
-                            {fanShopCms.seeMore || 'See more'}
+                            {fanShopCms.mainContent?.SeeMore || 'See more'}
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M9 5l7 7-7 7"/>

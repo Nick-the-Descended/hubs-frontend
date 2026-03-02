@@ -1,57 +1,51 @@
 import { sdk } from '$lib/sdk';
-import { strapi, mapParaglideLocaleToStrapi } from '$lib/strapi';
-import { getLocale } from '$lib/paraglide/runtime';
+import { strapi } from '$lib/strapi';
 import { medusaProductToCard } from '$lib/types/medusa-adapter';
 import type { PageServerLoad } from './$types';
-import type { FanShop } from '$lib/types/strapi-generated';
 import type { ProductCardItem } from '$lib/types/medusa-adapter';
+
+interface FanShopMainContent {
+    Title: string;
+    SeeMore: string;
+    Image: { url: string };
+    Collection: string;
+}
 
 const PAGE_SIZE = 8;
 
 export const load: PageServerLoad = async ({ parent }) => {
     const { header } = await parent();
 
-    // Fetch CMS content (banner) from Strapi
-    let fanShopCms: { banner: FanShop['Banner'] | null; productListTitle: string | null; seeMore: string | null } = {
-        banner: null, productListTitle: null, seeMore: null,
-    };
+    // Fetch CMS content from Strapi
+    let fanShopCms: { mainContent: FanShopMainContent | null } = { mainContent: null };
     try {
-        const locale = getLocale();
-        const strapiLocale = mapParaglideLocaleToStrapi(locale);
-        const fanShopData = await strapi.findSingle<FanShop>('fanShop', {
-            locale: strapiLocale,
-            fields: [
-                'productListTitle',
-                'seeMore',
-                `Banner { id buttonText Image { width height ext url name } }`,
-            ],
+        const fanShopData = await strapi.findSingle<{ main_content: FanShopMainContent }>('fanshop', {
+            fields: ['main_content { Title SeeMore Image { url } Collection }'],
         });
         if (fanShopData) {
-            fanShopCms = {
-                banner: fanShopData.Banner ?? null,
-                productListTitle: fanShopData.productListTitle ?? null,
-                seeMore: fanShopData.seeMore ?? null,
-            };
+            fanShopCms = { mainContent: fanShopData.main_content ?? null };
         }
     } catch (err) {
         console.error('Error fetching fan shop CMS data from Strapi:', err);
     }
 
-    // Fetch products from Medusa (fan-shop category)
+    const collectionHandle = fanShopCms.mainContent?.Collection ?? 'fan-shop';
+
+    // Fetch products from Medusa by collection
     let products: ProductCardItem[] = [];
     try {
-        const [{ product_categories }, { regions }] = await Promise.all([
-            sdk.store.category.list({ handle: 'fan-shop', limit: 1 } as any),
+        const [{ collections }, { regions }] = await Promise.all([
+            sdk.store.collection.list({ handle: collectionHandle } as any),
             sdk.store.region.list(),
         ]);
-        const categoryId = product_categories?.[0]?.id ?? null;
+        const collectionId = collections?.[0]?.id ?? null;
         const regionId = regions?.[0]?.id;
-        if (categoryId) {
+        if (collectionId) {
             const { products: medusaProducts } = await sdk.store.product.list({
                 limit: PAGE_SIZE,
                 region_id: regionId,
                 fields: '+variants.calculated_price,+variants.options,+options,+categories,+images',
-                category_id: categoryId,
+                collection_id: collectionId,
             } as any);
             products = (medusaProducts ?? []).map(medusaProductToCard);
         }
