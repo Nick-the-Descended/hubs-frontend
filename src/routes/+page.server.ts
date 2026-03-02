@@ -191,10 +191,13 @@ export const load: PageServerLoad = async () => {
         fetchFanShopProducts(),
     ]);
 
-    const seasonalOffers = (raw?.seasonal_offers?.SeasonalOffersItem ?? []).map((item) => ({
-        imageUrl: `${PUBLIC_STRAPI_URL}${item.Image.url}`,
-        href: `/products/all?collection=${item.Collection}`,
-    }));
+    const seasonalOffers = {
+        title: raw?.seasonal_offers?.Title ?? '',
+        items: (raw?.seasonal_offers?.SeasonalOffersItem ?? []).map((item) => ({
+            imageUrl: `${PUBLIC_STRAPI_URL}${item.Image.url}`,
+            href: `/products/all?collection=${item.Collection}`,
+        })),
+    };
 
     const fanshop = fanshopRaw ? { ...fanshopRaw, products: fanshopProducts } : null;
     const services = raw?.services ?? [];

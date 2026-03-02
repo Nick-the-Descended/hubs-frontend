@@ -43,11 +43,11 @@
 
 {#if data.featuredSection}{@render productSection(data.featuredSection)}{/if}
 
-{#if data.seasonalOffers.length === 3}
+{#if data.seasonalOffers.items.length === 3}
 <section class="py-12 mx-auto">
-    <h2 class="mx-12 mb-8 text-2xl font-semibold">სეზონური შეთავაზებები</h2>
+    <h2 class="mx-12 mb-8 text-2xl font-semibold">{data.seasonalOffers.title}</h2>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:rounded-xl mx-12 overflow-clip">
-        {#each data.seasonalOffers as item}
+        {#each data.seasonalOffers.items as item}
             <a href={item.href} class="relative max-h-[75svh] overflow-hidden">
                 <img src={item.imageUrl} alt="seasonal offer" class="h-full w-full object-cover">
             </a>
